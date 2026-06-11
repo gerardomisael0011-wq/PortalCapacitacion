@@ -22,13 +22,22 @@
     <script>
         async function ingresar() {
             const nomina = document.getElementById('nomina').value;
-            const res = await fetch('/login', {
+            
+            // Enviamos la nómina al servidor
+            const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nomina })
+                body: JSON.stringify({ nomina: nomina })
             });
-            const html = await res.text();
-            document.body.innerHTML = html;
+
+            // Recibimos la respuesta (el HTML con las capacitaciones o error)
+            const contenido = await response.text();
+            
+            if (response.ok) {
+                document.body.innerHTML = contenido;
+            } else {
+                alert("Nómina no encontrada en el sistema.");
+            }
         }
     </script>
 </body>
