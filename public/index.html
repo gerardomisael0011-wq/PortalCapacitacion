@@ -20,10 +20,15 @@
         <button onclick="ingresar()">Ingresar</button>
     </div>
     <script>
-        function ingresar() {
+        async function ingresar() {
             const nomina = document.getElementById('nomina').value;
-            alert("Redirigiendo a tus capacitaciones: " + nomina);
-            // Aquí luego conectaremos con la lógica de tu base de datos
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nomina })
+            });
+            const html = await res.text();
+            document.body.innerHTML = html;
         }
     </script>
 </body>
