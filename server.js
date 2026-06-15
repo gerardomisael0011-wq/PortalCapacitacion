@@ -10,7 +10,7 @@ app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123"; 
 
-// Ruta principal para validar usuario
+// Ruta principal para validar usuario y mostrar SUS cursos
 app.post('/login', (req, res) => {
     const { nomina } = req.body;
     
@@ -19,24 +19,32 @@ app.post('/login', (req, res) => {
             return res.status(401).send('<h2>Nómina no encontrada.</h2><br><a href="/">Volver</a>');
         }
 
-        // Consultamos cursos asignados (asumiendo que en el futuro los ligaremos a cursos)
+        // CONSULTA INTELIGENTE: Trae solo los cursos vinculados a este usuario
         const query = `
-            SELECT id, titulo, 'PENDIENTE' as estado 
-            FROM cursos
+            SELECT c.id, c.titulo 
+            FROM cursos c
+            JOIN asignaciones a ON c.id = a.id_curso
+            WHERE a.id_usuario = ?
         `;
 
-        db.all(query, [], (err, cursos) => {
-            if (err) return res.status(500).send("Error al consultar cursos");
+        db.all(query, [nomina], (err, cursos) => {
+            if (err) return res.status(500).send("Error al consultar tus cursos");
 
             let html = `<h1>Bienvenido, ${user.nombre || nomina}</h1><h3>Tus cursos asignados:</h3><ul>`;
             
-            cursos.forEach(c => {
-                html += `<li style="margin-bottom: 15px;">
-                    <b>${c.titulo}</b> 
-                    <br>
-                    <a href="/ver-curso?id=${c.id}"><button style="cursor:pointer; background:#3498db; color:white; border:none; padding:5px 10px; border-radius:4px;">Ver Contenido</button></a>
-                </li>`;
-            });
+            if (cursos.length === 0) {
+                html += `<li>No tienes cursos asignados actualmente.</li>`;
+            } else {
+                cursos.forEach(c => {
+                    html += `<li style="margin-bottom: 15px;">
+                        <b>${c.titulo}</b> 
+                        <br>
+                        <a href="/ver-curso?id=${c.id}">
+                            <button style="cursor:pointer; background:#3498db; color:white; border:none; padding:5px 10px; border-radius:4px;">Ver Contenido</button>
+                        </a>
+                    </li>`;
+                });
+            }
 
             html += `</ul><br><hr><a href="/">Salir</a>`;
             res.send(html);
@@ -44,7 +52,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-// NUEVA RUTA: Renderizador Universal de Cursos
+// Renderizador Universal de Cursos
 app.get('/ver-curso', (req, res) => {
     const cursoId = req.query.id;
     
@@ -53,7 +61,6 @@ app.get('/ver-curso', (req, res) => {
 
         let contenidoHtml = "";
 
-        // Lógica "Camaleónica": El servidor detecta el tipo y decide cómo mostrarlo
         if (curso.tipo_contenido === 'video') {
             contenidoHtml = `<iframe width="100%" height="500" src="${curso.url_recurso}" frameborder="0" allowfullscreen></iframe>`;
         } else if (curso.tipo_contenido === 'pdf') {
@@ -95,7 +102,6 @@ app.post('/marcar-aprobado', (req, res) => {
     });
 });
 
-// Puerto dinámico para Render
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Servidor activo en puerto ${port}`);
