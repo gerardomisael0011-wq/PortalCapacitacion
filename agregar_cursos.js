@@ -6,7 +6,7 @@ const titulo = "Inducción Corporativa";
 const desc = "Video introductorio sobre los valores de la empresa";
 const tipo = "video"; // O 'pdf'
 const url_r = "https://www.youtube.com/embed/VIDEO_ID"; // Link embebido
-const url_f = "https://docs.google.com/forms/https://forms.gle/ocCx7SzaHxccAKRG7";
+const url_f = "https://docs.google.com/forms/tu-link";
 
 db.run(`INSERT INTO cursos (titulo, descripcion, tipo_contenido, url_recurso, url_form) 
         VALUES (?, ?, ?, ?, ?)`, [titulo, desc, tipo, url_r, url_f], (err) => {

@@ -14,7 +14,7 @@ db.serialize(() => {
     
     // Datos de prueba iniciales
     db.run("INSERT OR IGNORE INTO usuarios (nomina, nombre) VALUES ('2887', 'Usuario Prueba')");
-    db.run("INSERT OR IGNORE INTO cursos (id, titulo, url_recurso, url_form) VALUES (1, 'Curso de Seguridad', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'TU_LINK_DE_GOOGLE_FORMS_AQUI')");
+    db.run("INSERT OR IGNORE INTO cursos (id, titulo, url_recurso, url_form) VALUES (1, 'Curso de Seguridad', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/ocCx7SzaHxccAKRG7')");
     db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1)");
 });
 
