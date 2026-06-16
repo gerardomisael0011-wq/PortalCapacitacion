@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('empresa.db');
+const db = new sqlite3.Database('empresa_v2.db');
 
 // Ajusta estos valores con tu primer curso real
 const titulo = "Inducción Corporativa";
