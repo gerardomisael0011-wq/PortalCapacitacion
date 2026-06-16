@@ -12,7 +12,7 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
     
     // FORZAMOS la actualización del link usando REPLACE
-    db.run("REPLACE INTO cursos (id, titulo, url_recurso, url_form) VALUES (1, 'Curso de Seguridad', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/ocCx7SzaHxccAKRG7')");
+    db.run("REPLACE INTO cursos (id, titulo, url_recurso, url_form) VALUES (1, 'Curso de Seguridad', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR IGNORE INTO usuarios (nomina, nombre) VALUES ('2887', 'Usuario Prueba')");
     db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1)");
 });
