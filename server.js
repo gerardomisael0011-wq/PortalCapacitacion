@@ -53,7 +53,7 @@ app.get('/ver-curso', (req, res) => {
         res.send(`<h1>${curso.titulo}</h1>
                   <iframe src="${curso.url_recurso}" width="100%" height="400px"></iframe><br>
                   <script>window.open('${curso.url_form}', '_blank');</script>
-                  <p>Realiza el examen, <a href="${curso.url_form}" target="_blank">haz clic aquí para abrirlo</a>.</p>`);
+                  <p>Realiza el examen, <a href="${curso.url_form}" target="_blank">Abrir</a>.</p>`);
     });
 });
 
