@@ -7,35 +7,27 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="card" id="login-container">
-        <h2>Bienvenido</h2>
-        <p>Portal de Capacitación Corporativa</p>
-        <input type="text" id="nomina" placeholder="Introduce tu nómina">
-        <button class="btn-pending" onclick="ingresar()">Ingresar al Sistema</button>
+    <div class="card" id="app">
+        <h1>Portal de Capacitación</h1>
+        <p>Bienvenido. Ingrese su nómina:</p>
+        <input type="text" id="nomina" placeholder="Ej: 2887">
+        <button class="btn-pending" onclick="ingresar()">Acceder al Sistema</button>
     </div>
 
     <script>
         async function ingresar() {
             const nomina = document.getElementById('nomina').value;
-            
-            // Enviamos la nómina al servidor
-            const response = await fetch('/login', {
+            const res = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nomina: nomina })
+                body: JSON.stringify({ nomina })
             });
-
-            // Recibimos el HTML con los cursos
-            const contenido = await response.text();
-            
-            if (response.ok) {
-                // Aplicamos una clase de contenedor mayor para que los cursos luzcan bien
-                const container = document.getElementById('login-container');
-                container.style.maxWidth = '600px'; 
-                container.innerHTML = contenido;
+            const html = await res.text();
+            if (res.ok) {
+                // Inyectamos el contenido dentro de la card
+                document.getElementById('app').innerHTML = html;
             } else {
-                alert("Nómina no encontrada en el sistema.");
+                alert("Nómina no encontrada.");
             }
         }
     </script>

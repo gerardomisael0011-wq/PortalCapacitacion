@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser'); // Importante agregar esto
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const db = new sqlite3.Database('./empresa_v2.db');
@@ -10,14 +11,13 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
     
-    // Datos de prueba
     db.run("REPLACE INTO cursos (id, titulo, url_recurso, url_form) VALUES (1, 'Curso de Seguridad', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR IGNORE INTO usuarios (nomina, nombre) VALUES ('2887', 'Usuario Prueba')");
     db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1)");
 });
 
-app.use(express.json());
-app.use(express.static('public')); // Esto sirve automáticamente tu style.css y index.html
+app.use(bodyParser.json());
+app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123";
 
@@ -33,10 +33,9 @@ app.post('/login', (req, res) => {
                        WHERE a.id_usuario = ?`;
         
         db.all(query, [nomina, nomina], (err, cursos) => {
-            let html = `<h1>Hola, ${user.nombre}</h1><ul>`;
+            let html = `<h1>Hola, ${user.nombre}</h1><p>Cursos asignados:</p><ul>`;
             cursos.forEach(c => {
                 const esAprobado = (c.aprobado === 1);
-                // Ahora usamos las clases del CSS externo en lugar de estilos manuales
                 html += `<li><b>${c.titulo}</b>
                     <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
                         onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
@@ -53,15 +52,16 @@ app.post('/login', (req, res) => {
 app.get('/ver-curso', (req, res) => {
     db.get('SELECT * FROM cursos WHERE id = ?', [req.query.id], (err, c) => {
         if (!c) return res.send("Curso no encontrado");
-        res.send(`<div class="card"><h1>${c.titulo}</h1>
+        // Nota: Esta respuesta debe ser un HTML completo o ajustarse al div.card existente
+        res.send(`<!DOCTYPE html><html><head><link rel="stylesheet" href="style.css"></head>
+                  <body><div class="card"><h1>${c.titulo}</h1>
                   <iframe src="${c.url_recurso}" width="100%" height="300px" style="border:none;"></iframe>
                   <p>Al terminar, envía tu examen:</p>
                   <a href="${c.url_form}" target="_blank">ABRIR EXAMEN</a>
-                  <br><br><a href="/">Volver</a></div>`);
+                  <br><br><a href="/">Volver</a></div></body></html>`);
     });
 });
 
-// Ruta de comunicación con Google Forms
 app.post('/marcar-aprobado', (req, res) => {
     const { nomina, id_evaluacion, token } = req.body;
     if (token !== CLAVE_SECRETA) return res.status(403).send("No autorizado");
@@ -70,4 +70,4 @@ app.post('/marcar-aprobado', (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Servidor activo en puerto ${port}`));
+app.listen(port, () => console.log(`Servidor activo`));
