@@ -11,7 +11,6 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
     
-    // FORZAMOS la actualización del link usando REPLACE
     db.run("REPLACE INTO cursos (id, titulo, url_recurso, url_form) VALUES (1, 'Curso de Seguridad', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR IGNORE INTO usuarios (nomina, nombre) VALUES ('2887', 'Usuario Prueba')");
     db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1)");
@@ -36,9 +35,21 @@ app.post('/login', (req, res) => {
         db.all(query, [nomina, nomina], (err, cursos) => {
             let html = `<h1>Bienvenido, ${user.nombre}</h1><ul>`;
             cursos.forEach(c => {
-                const esAprobado = c.aprobado === 1;
+                const esAprobado = (c.aprobado === 1);
+                // Lógica del botón: Si es aprobado, href="#" y cursor not-allowed
                 html += `<li><b>${c.titulo}</b> <br>
-                    <a href="/ver-curso?id=${c.id}"><button style="background:${esAprobado ? '#27ae60' : '#2980b9'}; color:white; padding:10px;">${esAprobado ? 'APROBADO' : 'Ver Contenido'}</button></a>
+                    <a href="${esAprobado ? '#' : '/ver-curso?id=' + c.id}" style="text-decoration: none;">
+                        <button style="
+                            background: ${esAprobado ? '#27ae60' : '#2980b9'}; 
+                            color: white; 
+                            padding: 12px 20px; 
+                            border: none; 
+                            border-radius: 5px;
+                            cursor: ${esAprobado ? 'not-allowed' : 'pointer'};
+                            font-weight: bold;">
+                            ${esAprobado ? 'APROBADO' : 'Ver Contenido'}
+                        </button>
+                    </a>
                 </li><br>`;
             });
             res.send(html + `<hr><a href="/">Salir</a>`);
@@ -49,11 +60,11 @@ app.post('/login', (req, res) => {
 app.get('/ver-curso', (req, res) => {
     db.get('SELECT * FROM cursos WHERE id = ?', [req.query.id], (err, curso) => {
         if (!curso) return res.send("Curso no encontrado");
-        // CORRECCIÓN: Script para forzar apertura en ventana nueva
         res.send(`<h1>${curso.titulo}</h1>
                   <iframe src="${curso.url_recurso}" width="100%" height="400px"></iframe><br>
                   <script>window.open('${curso.url_form}', '_blank');</script>
-                  <p>Realiza el examen, <a href="${curso.url_form}" target="_blank">Abrir</a>.</p>`);
+                  <p>Si el examen no abrió, <a href="${curso.url_form}" target="_blank">haz clic aquí</a>.</p>
+                  <br><br><a href="javascript:history.back()">Volver a mis cursos</a>`);
     });
 });
 
