@@ -2,23 +2,19 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Capacitación</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 300px; }
-        h2 { color: #2c3e50; }
-        input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #2980b9; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="card">
+
+    <div class="card" id="login-container">
         <h2>Bienvenido</h2>
         <p>Portal de Capacitación Corporativa</p>
         <input type="text" id="nomina" placeholder="Introduce tu nómina">
-        <button onclick="ingresar()">Ingresar</button>
+        <button class="btn-pending" onclick="ingresar()">Ingresar al Sistema</button>
     </div>
+
     <script>
         async function ingresar() {
             const nomina = document.getElementById('nomina').value;
@@ -30,11 +26,14 @@
                 body: JSON.stringify({ nomina: nomina })
             });
 
-            // Recibimos la respuesta (el HTML con las capacitaciones o error)
+            // Recibimos el HTML con los cursos
             const contenido = await response.text();
             
             if (response.ok) {
-                document.body.innerHTML = contenido;
+                // Aplicamos una clase de contenedor mayor para que los cursos luzcan bien
+                const container = document.getElementById('login-container');
+                container.style.maxWidth = '600px'; 
+                container.innerHTML = contenido;
             } else {
                 alert("Nómina no encontrada en el sistema.");
             }
