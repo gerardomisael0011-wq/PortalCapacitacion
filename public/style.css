@@ -1,70 +1,98 @@
+/* public/style.css */
 :root {
-    --primary: #2563eb;
-    --success: #059669;
-    --bg: #f1f5f9;
-    --text: #1e293b;
+    --primary-blue: #1d4ed8; /* El azul corporativo de Johnan */
+    --success-green: #059669;
+    --bg-light: #f3f4f6;
+    --text-main: #111827;
     --card-bg: #ffffff;
+    --header-h: 80px; /* Altura de la cabecera */
 }
 
 body {
-    font-family: 'Inter', system-ui, sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    margin: 0;
+    padding-top: var(--header-h); /* Espacio para que el contenido no quede debajo */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
+    min-height: calc(100vh - var(--header-h));
 }
 
-.card {
-    background: var(--card-bg);
-    padding: 2.5rem;
-    border-radius: 16px;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+/* --- CABECERA CORPORATIVA --- */
+.header-johnan {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 450px;
-}
-
-h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-p { color: #64748b; margin-bottom: 2rem; }
-
-input {
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 1rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    box-sizing: border-box;
-    font-size: 1rem;
-}
-
-button {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: white;
-}
-
-.btn-pending { background-color: var(--primary); }
-.btn-pending:hover { background-color: #1d4ed8; }
-
-.btn-approved { background-color: var(--success); cursor: not-allowed; opacity: 0.9; }
-
-/* Lista de cursos */
-ul { list-style: none; padding: 0; }
-li {
-    background: #f8fafc;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 10px;
+    height: var(--header-h);
+    background-color: #ffffff; /* Fondo blanco limpio */
+    border-bottom: 2px solid #e2e8f0; /* Línea sutil de separación */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #e2e8f0;
+    padding: 0 50px;
+    box-sizing: border-box;
+    z-index: 1000; /* Siempre arriba */
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-j-mex {
+    height: 60px; /* Tamaño del logo */
+    width: auto;
+}
+
+.company-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin: 0;
+}
+
+/* --- ESTILOS DE CARD PROFESIONALES --- */
+.card {
+    background: var(--card-bg);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+}
+
+h1 { color: #1e293b; font-size: 1.8rem; margin-bottom: 0.5rem; }
+p { color: #64748b; margin-bottom: 2.5rem; }
+
+/* Botones con estilo moderno y sutiles sombras */
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+}
+
+.btn-pending {
+    background-color: var(--primary-blue);
+    box-shadow: 0 4px 6px rgba(29, 78, 216, 0.25);
+}
+.btn-pending:hover {
+    background-color: #1a43c4;
+    transform: translateY(-2px);
+}
+
+.btn-approved {
+    background-color: var(--success-green);
+    cursor: not-allowed;
+    opacity: 0.9;
 }

@@ -3,14 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Capacitación</title>
+    <title>Portal de Capacitación | Johnan de México</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="card" id="app">
+
+    <header class="header-johnan">
+        <div class="logo-container">
+            <img src="logo_johnan.png" alt="Johnan J-Mex Logo" class="logo-j-mex">
+            <h1 class="company-name">Johnan de México S.A. de C.V.</h1>
+        </div>
+    </header>
+
+    <div class="card" id="app-container">
         <h1>Portal de Capacitación</h1>
-        <p>Bienvenido. Ingrese su nómina:</p>
-        <input type="text" id="nomina">
+        <p>Bienvenido. Ingrese su nómina para acceder.</p>
+        <input type="text" id="nomina" placeholder="Ej: 2887">
         <button class="btn-pending" onclick="ingresar()">Acceder al Sistema</button>
     </div>
 
@@ -22,10 +33,10 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nomina })
             });
-            const html = await res.text();
+            const contenido = await res.text();
             if (res.ok) {
                 // Inyectamos el contenido dentro de la card
-                document.getElementById('app').innerHTML = html;
+                document.getElementById('app-container').innerHTML = contenido;
             } else {
                 alert("Nómina no encontrada.");
             }

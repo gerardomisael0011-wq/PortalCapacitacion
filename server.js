@@ -32,18 +32,21 @@ app.post('/login', (req, res) => {
                        LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
                        WHERE a.id_usuario = ?`;
         
+        // ... dentro de app.post('/login') en server.js ...
         db.all(query, [nomina, nomina], (err, cursos) => {
-            let html = `<h1>Hola, ${user.nombre}</h1><p>Cursos asignados:</p><ul>`;
+            // Texto más corporativo y sin el título de "Bienvenido" que ya está arriba.
+            let html = `<h1>Sus Cursos</h1><p>Panel de asignaciones:</p><ul>`;
             cursos.forEach(c => {
                 const esAprobado = (c.aprobado === 1);
-                html += `<li><b>${c.titulo}</b>
+                html += `<li>
+                    <b>${c.titulo}</b>
                     <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
                         onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
                         ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
                     </button>
                 </li>`;
             });
-            res.send(html + `</ul><br><a href="/">Salir</a>`);
+            res.send(html + `</ul><br><a href="/" style="color:var(--primary-blue)">Cerrar Sesión</a>`);
         });
     });
 });
