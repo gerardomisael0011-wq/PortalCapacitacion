@@ -225,7 +225,7 @@ db.serialize(() => {
     // Inserción de cursos base (El curso 3 ahora es tipo 'video' con enlace de YouTube para pruebas)
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Capacitación de Calidad', 'Calidad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Capacitación de Calidad', 'Calidad', 'video', '/videos/calidad.mp4', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUN0lMU0VHTERZUTdNM1FYUURNMDIxOFpFSy4u')");
 });
 
 app.use(bodyParser.json());
