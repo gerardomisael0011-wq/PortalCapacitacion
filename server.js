@@ -4,7 +4,7 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const db = new sqlite3.Database('./empresa_v2.db');
 
-// Configuración inicial de tablas y actualización forzada de nombres
+// Configuración inicial de tablas
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
@@ -15,12 +15,6 @@ db.serialize(() => {
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
-
-    // Usuario principal predeterminado
-    db.run("INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES ('2887', 'Gerardo Misael Romero Aguilar')");
-    
-    // Reparación automática si el usuario principal quedó con nombre vacío o genérico
-    db.run("UPDATE usuarios SET nombre = 'Gerardo Misael Romero Aguilar' WHERE nomina = '2887' AND (nombre IS NULL OR nombre = '' OR nombre LIKE 'Colaborador%')");
 });
 
 app.use(bodyParser.json());
@@ -53,73 +47,68 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Ruta de Login (POST) blindada y optimizada
+// Ruta de Login (POST) con renderizado directo de nombre y datos
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
 
-    const nombreFallback = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
-    
-    // Inserta o reemplaza garantizando que el nombre nunca quede vacío o mal asignado
-    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, COALESCE((SELECT nombre FROM usuarios WHERE nomina = ? AND nombre != "" AND nombre NOT LIKE "Colaborador%"), ?))', 
-    [nomina, nomina, nombreFallback], () => {
-        
-        db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
+    // Definición directa del nombre según la nómina ingresada
+    const nombreMostrar = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
+    const nominaMostrar = nomina;
+    const fotoPath = `/fotos/${nominaMostrar}.png`;
+
+    // Guardamos/actualizamos el usuario de forma segura en segundo plano
+    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nominaMostrar, nombreMostrar], () => {
+        db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nominaMostrar, nominaMostrar, nominaMostrar], () => {
             
-            db.get('SELECT nomina, COALESCE(NULLIF(nombre, ""), ?) AS nombre FROM usuarios WHERE nomina = ?', [nombreFallback, nomina], (err, user) => {
-                const nombreMostrar = user ? user.nombre : nombreFallback;
-                const nominaMostrar = user ? user.nomina : nomina;
-                const fotoPath = `/fotos/${nominaMostrar}.png`;
+            const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
+                            JOIN asignaciones a ON c.id = a.id_curso 
+                            LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
+                            WHERE a.id_usuario = ? 
+                            ORDER BY c.categoria`;
+            
+            db.all(query, [nominaMostrar, nominaMostrar], (err, cursos) => {
+                let html = `
+                <!DOCTYPE html>
+                <html>
+                <head><link rel="stylesheet" href="style.css"></head>
+                <body>
+                    <header class="header-johnan">
+                        <img src="/logo_johnan.png" alt="Logo">
+                        <strong>Johnan de México</strong>
+                    </header>
 
-                const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
-                                JOIN asignaciones a ON c.id = a.id_curso 
-                                LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
-                                WHERE a.id_usuario = ? 
-                                ORDER BY c.categoria`;
-                
-                db.all(query, [nominaMostrar, nominaMostrar], (err, cursos) => {
-                    let html = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head><link rel="stylesheet" href="style.css"></head>
-                    <body>
-                        <header class="header-johnan">
-                            <img src="/logo_johnan.png" alt="Logo">
-                            <strong>Johnan de México</strong>
-                        </header>
-
-                        <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="text-align: right;">
-                                    <p style="margin:0; font-weight:bold; font-size: 14px;">${nombreMostrar}</p>
-                                    <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${nominaMostrar}</p>
-                                </div>
-                                <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
+                    <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="text-align: right;">
+                                <p style="margin:0; font-weight:bold; font-size: 14px;">${nombreMostrar}</p>
+                                <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${nominaMostrar}</p>
                             </div>
+                            <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
                         </div>
+                    </div>
 
-                        <div class="card" style="margin-top: 20px;">
-                            <h1>Sus Cursos</h1>`;
-                    
-                    let categoriaActual = "";
-                    cursos.forEach(c => {
-                        if (c.categoria !== categoriaActual) {
-                            categoriaActual = c.categoria;
-                            html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
-                        }
+                    <div class="card" style="margin-top: 20px;">
+                        <h1>Sus Cursos</h1>`;
+                
+                let categoriaActual = "";
+                cursos.forEach(c => {
+                    if (c.categoria !== categoriaActual) {
+                        categoriaActual = c.categoria;
+                        html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
+                    }
 
-                        const esAprobado = (c.aprobado === 1);
-                        html += `<div class="li-item" style="margin-bottom: 10px;">
-                            <strong>${c.titulo}</strong>
-                            <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
-                                onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
-                                ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
-                            </button>
-                        </div>`;
-                    });
-                    
-                    res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
+                    const esAprobado = (c.aprobado === 1);
+                    html += `<div class="li-item" style="margin-bottom: 10px;">
+                        <strong>${c.titulo}</strong>
+                        <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
+                            onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
+                            ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
+                        </button>
+                    </div>`;
                 });
+                
+                res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
             });
         });
     });
