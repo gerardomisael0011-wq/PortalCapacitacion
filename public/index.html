@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Capacitación | Johnan de México</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header-johnan">
+        <!-- Asegúrate de usar la clase CSS que definimos arriba -->
+        <img src="logo_johnan.png" alt="Logo"> 
+        <h2 style="color: #0033a0; margin: 0; font-size: 1.2rem;">Johnan de México</h2>
+    </header>
+
+    <div class="card" id="app-container">
+        <h1>Portal de Capacitación</h1>
+        <p>Bienvenido. Ingrese su nómina para acceder.</p>
+        <input type="text" id="nomina" placeholder="">
+        <button class="btn-pending" onclick="ingresar()">Acceder al Sistema</button>
+    </div>
+
+    <script>
+        async function ingresar() {
+            const nomina = document.getElementById('nomina').value;
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nomina })
+            });
+            const contenido = await res.text();
+            if (res.ok) {
+                // Inyectamos el contenido dentro de la card
+                document.getElementById('app-container').innerHTML = contenido;
+            } else {
+                alert("Nómina no encontrada.");
+            }
+        }
+    </script>
+</body>
+</html>

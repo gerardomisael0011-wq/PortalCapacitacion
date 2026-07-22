@@ -7,38 +7,53 @@ const db = new sqlite3.Database('./empresa_v2.db');
 // Configuración inicial de tablas
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
-    
-    // Tabla con categoría y tipo de contenido
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
-    
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Inserción de cursos
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', '/videos/curso.mp4', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
 
-    // Inserción de usuario
     db.run("INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES ('2887', 'Gerardo Misael Romero Aguilar')");
     db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1), ('2887', 2), ('2887', 3)");
 });
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123";
 
-// Ruta raíz para servir el index.html principal
+// Pantalla de Login directa para que nunca falle el GET /
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
+    res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Portal de Capacitación - Johnan</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f7f6; margin:0;">
+        <div class="card" style="text-align: center; width: 350px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <img src="/logo_johnan.png" alt="Logo" style="width: 120px; margin-bottom: 20px;">
+            <h2 style="color: #0033a0; margin-bottom: 20px;">Portal de Capacitación</h2>
+            <form action="/login" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="text" name="nomina" placeholder="Ingrese su Nómina (ej. 2887)" required style="padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px;">
+                <button type="submit" style="padding: 12px; background: #0033a0; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold;">Ingresar</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    `);
 });
 
-// Ruta de Login
+// Ruta de Login por POST
 app.post('/login', (req, res) => {
-    const { nomina } = req.body;
+    const nomina = req.body.nomina;
     db.get('SELECT * FROM usuarios WHERE nomina = ?', [nomina], (err, user) => {
-        if (!user) return res.status(401).send('<h2>Nómina no encontrada.</h2>');
+        if (!user) return res.send('<script>alert("Nómina no encontrada"); window.location.href="/";</script>');
         
         const fotoPath = `/fotos/${nomina}.png`;
 
@@ -89,7 +104,7 @@ app.post('/login', (req, res) => {
                 </div>`;
             });
             
-            res.send(html + `</div><br><a href="/" style="color:#0033a0;">Cerrar Sesión</a></div></body></html>`);
+            res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
         });
     });
 });

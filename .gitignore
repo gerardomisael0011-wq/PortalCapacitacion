@@ -1,0 +1,4 @@
+node_modules/
+public/videos/curso.mp4
+*.db
+.env
