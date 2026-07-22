@@ -27,7 +27,7 @@ app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123";
 
-// Ruta raíz (Login HTML si no se maneja desde la carpeta public)
+// Ruta raíz (Login HTML)
 app.get('/', (req, res) => {
     res.send(`
     <!DOCTYPE html>
@@ -51,21 +51,19 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Ruta de Login (POST) con registro automático y actualización garantizada de datos
+// Ruta de Login (POST) con actualización forzada de nombre
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
 
+    // Definimos el nombre correcto de forma estricta según la nómina ingresada
     const nombreDefinitivo = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
     
-    // 1. Aseguramos que la nómina exista en la base de datos
-    db.run('INSERT OR IGNORE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreDefinitivo], () => {
-        // 2. Aseguramos que tenga sus cursos asignados por defecto
+    // Usamos INSERT OR REPLACE para asegurarnos de que el nombre SIEMPRE se actualice bien en la BD
+    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreDefinitivo], () => {
         db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
             
-            // 3. Consulta fresca para capturar el nombre y la nómina exacta recién guardados o existentes
             db.get('SELECT * FROM usuarios WHERE nomina = ?', [nomina], (err, user) => {
-                const usuarioActual = user || { nomina, nombre: nombreDefinitivo };
                 const fotoPath = `/fotos/${nomina}.png`;
 
                 const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
@@ -88,8 +86,8 @@ app.post('/login', (req, res) => {
                         <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <div style="text-align: right;">
-                                    <p style="margin:0; font-weight:bold; font-size: 14px;">${usuarioActual.nombre}</p>
-                                    <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${usuarioActual.nomina}</p>
+                                    <p style="margin:0; font-weight:bold; font-size: 14px;">${user ? user.nombre : nombreDefinitivo}</p>
+                                    <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${nomina}</p>
                                 </div>
                                 <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
                             </div>
