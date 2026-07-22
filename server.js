@@ -7,14 +7,19 @@ const db = new sqlite3.Database('./empresa_v2.db');
 // Configuración inicial de tablas
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
+    
+    // Tabla con categoría y tipo de contenido
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
+    
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
+    // Inserción de cursos
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', '/videos/curso.mp4', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
 
+    // Inserción de usuario principal
     db.run("INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES ('2887', 'Gerardo Misael Romero Aguilar')");
     db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1), ('2887', 2), ('2887', 3)");
 });
@@ -25,7 +30,7 @@ app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123";
 
-// Pantalla de Login directa para que nunca falle el GET /
+// Ruta raíz para servir la pantalla de login directamente
 app.get('/', (req, res) => {
     res.send(`
     <!DOCTYPE html>
@@ -49,7 +54,7 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Ruta de Login por POST
+// Ruta de Login (POST)
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina;
     db.get('SELECT * FROM usuarios WHERE nomina = ?', [nomina], (err, user) => {
@@ -80,7 +85,7 @@ app.post('/login', (req, res) => {
                             <p style="margin:0; font-weight:bold; font-size: 14px;">${user.nombre}</p>
                             <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${user.nomina}</p>
                         </div>
-                        <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                        <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
                     </div>
                 </div>
 
