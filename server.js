@@ -8,13 +8,13 @@ const db = new sqlite3.Database('./empresa_v2.db');
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
     
-    // Tabla con columna 'categoria' y 'tipo_contenido' para la lógica inteligente
+    // Tabla con categoría y tipo de contenido
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
     
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Inserción de cursos con su categoría, tipo de contenido, video local y tu enlace real de Microsoft Forms
+    // Inserción de cursos
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', '/videos/curso.mp4', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
@@ -29,6 +29,11 @@ app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123";
 
+// Ruta raíz para servir el index.html principal
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
 // Ruta de Login
 app.post('/login', (req, res) => {
     const { nomina } = req.body;
@@ -37,7 +42,6 @@ app.post('/login', (req, res) => {
         
         const fotoPath = `/fotos/${nomina}.png`;
 
-        // Consulta que agrupa por categoría
         const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
                         JOIN asignaciones a ON c.id = a.id_curso 
                         LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
@@ -70,7 +74,6 @@ app.post('/login', (req, res) => {
             
             let categoriaActual = "";
             cursos.forEach(c => {
-                // Genera el título de la sección al cambiar de categoría
                 if (c.categoria !== categoriaActual) {
                     categoriaActual = c.categoria;
                     html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
@@ -91,14 +94,13 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Ruta para ver el curso (Visualizador Inteligente con Video y Examen Incrustado)
+// Ruta para ver el curso
 app.get('/ver-curso', (req, res) => {
     db.get('SELECT * FROM cursos WHERE id = ?', [req.query.id], (err, c) => {
         if (!c) return res.send("Curso no encontrado");
         
         let contenidoHtml = "";
 
-        // Lógica según el tipo de contenido
         if (c.tipo_contenido === 'video') {
             contenidoHtml = `<video controls width="100%" style="max-height: 450px; border-radius: 8px; background: #000;"><source src="${c.url_recurso}" type="video/mp4">Tu navegador no soporta la reproducción de video.</video>`;
         } else if (c.tipo_contenido === 'presentacion') {
