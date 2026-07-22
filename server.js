@@ -4,21 +4,23 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const db = new sqlite3.Database('./empresa_v2.db');
 
-// Configuración inicial de tablas
+// Configuración inicial de tablas y actualización forzada de nombres
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Inserción de cursos base con sus categorías y tipos de contenido
+    // Inserción de cursos base con sus categorías
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
 
     // Usuario principal predeterminado
     db.run("INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES ('2887', 'Gerardo Misael Romero Aguilar')");
-    db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1), ('2887', 2), ('2887', 3)");
+    
+    // Reparación automática si el usuario principal quedó con nombre vacío o genérico
+    db.run("UPDATE usuarios SET nombre = 'Gerardo Misael Romero Aguilar' WHERE nomina = '2887' AND (nombre IS NULL OR nombre = '' OR nombre LIKE 'Colaborador%')");
 });
 
 app.use(bodyParser.json());
@@ -51,22 +53,19 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Ruta de Login (POST) con actualización forzada de nombre
-// Ruta de Login (POST) optimizada para renderizar los datos correctamente
+// Ruta de Login (POST) blindada y optimizada
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
 
-    // Definimos el nombre que por ley debe llevar si no es el principal
     const nombreFallback = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
     
-    // Forzamos actualización absoluta en la BD para limpiar cualquier registro viejo o vacío
-    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, COALESCE((SELECT nombre FROM usuarios WHERE nomina = ?), ?))', 
+    // Inserta o reemplaza garantizando que el nombre nunca quede vacío o mal asignado
+    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, COALESCE((SELECT nombre FROM usuarios WHERE nomina = ? AND nombre != "" AND nombre NOT LIKE "Colaborador%"), ?))', 
     [nomina, nomina, nombreFallback], () => {
         
         db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
             
-            // Consultamos asegurando que si el nombre viene nulo o vacío, tome el formato correcto
             db.get('SELECT nomina, COALESCE(NULLIF(nombre, ""), ?) AS nombre FROM usuarios WHERE nomina = ?', [nombreFallback, nomina], (err, user) => {
                 const nombreMostrar = user ? user.nombre : nombreFallback;
                 const nominaMostrar = user ? user.nomina : nomina;
