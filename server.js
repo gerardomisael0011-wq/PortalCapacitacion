@@ -11,7 +11,7 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Inserción de cursos base con sus categorías
+    // Inserción de cursos base con sus categorías y tipos de contenido
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
@@ -27,20 +27,45 @@ app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123";
 
-// Ruta de Login (POST) blindada: Si no existe el usuario, lo crea de inmediato y le asigna los cursos
+// Ruta raíz (Login HTML si no se maneja desde la carpeta public)
+app.get('/', (req, res) => {
+    res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Portal de Capacitación - Johnan</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f7f6; margin:0;">
+        <div class="card" style="text-align: center; width: 350px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <img src="/logo_johnan.png" alt="Logo" style="width: 120px; margin-bottom: 20px;" onerror="this.style.display='none'">
+            <h2 style="color: #0033a0; margin-bottom: 20px;">Portal de Capacitación</h2>
+            <form action="/login" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="text" name="nomina" placeholder="Ingrese su Nómina (ej. 2887)" required style="padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px;">
+                <button type="submit" style="padding: 12px; background: #0033a0; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold;">Ingresar</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    `);
+});
+
+// Ruta de Login (POST) con registro automático y actualización garantizada de datos
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
 
-    // 1. Nos aseguramos de insertar la nómina si es nueva (evita cualquier error de "no encontrada")
     const nombreDefinitivo = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
     
-    db.run('INSERT OR IGNORE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreDefinitivo], (err) => {
-        // 2. Nos aseguramos de asignarle los 3 cursos base para que nunca aparezca vacía su lista
+    // 1. Aseguramos que la nómina exista en la base de datos
+    db.run('INSERT OR IGNORE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreDefinitivo], () => {
+        // 2. Aseguramos que tenga sus cursos asignados por defecto
         db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
             
-            // 3. Consultamos los datos actualizados del usuario y sus cursos
+            // 3. Consulta fresca para capturar el nombre y la nómina exacta recién guardados o existentes
             db.get('SELECT * FROM usuarios WHERE nomina = ?', [nomina], (err, user) => {
+                const usuarioActual = user || { nomina, nombre: nombreDefinitivo };
                 const fotoPath = `/fotos/${nomina}.png`;
 
                 const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
@@ -63,8 +88,8 @@ app.post('/login', (req, res) => {
                         <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <div style="text-align: right;">
-                                    <p style="margin:0; font-weight:bold; font-size: 14px;">${user.nombre}</p>
-                                    <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${user.nomina}</p>
+                                    <p style="margin:0; font-weight:bold; font-size: 14px;">${usuarioActual.nombre}</p>
+                                    <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${usuarioActual.nomina}</p>
                                 </div>
                                 <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
                             </div>
@@ -97,7 +122,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Ruta para ver el curso
+// Ruta para ver el curso (Visualizador Inteligente)
 app.get('/ver-curso', (req, res) => {
     db.get('SELECT * FROM cursos WHERE id = ?', [req.query.id], (err, c) => {
         if (!c) return res.send("Curso no encontrado");
