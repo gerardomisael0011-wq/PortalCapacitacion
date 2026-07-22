@@ -7,137 +7,100 @@ const db = new sqlite3.Database('./empresa_v2.db');
 // Configuración inicial de tablas
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
+    
+    // Tabla con columna 'categoria' y 'tipo_contenido' para la lógica inteligente
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
+    
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Inserción de cursos base
-    db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', '/videos/curso.mp4', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
+    // Inserción de cursos con su categoría y tipo de contenido
+    db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://drive.google.com/viewerng/viewer?url=http://www.africau.edu/images/default/sample.pdf', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
 
-    // Usuario principal predeterminado
+    // Inserción de usuario
     db.run("INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES ('2887', 'Gerardo Misael Romero Aguilar')");
     db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1), ('2887', 2), ('2887', 3)");
 });
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123";
 
-// Ruta raíz para la pantalla de Login
-app.get('/', (req, res) => {
-    res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Portal de Capacitación - Johnan</title>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f7f6; margin:0;">
-        <div class="card" style="text-align: center; width: 350px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <img src="/logo_johnan.png" alt="Logo" style="width: 120px; margin-bottom: 20px;">
-            <h2 style="color: #0033a0; margin-bottom: 20px;">Portal de Capacitación</h2>
-            <form action="/login" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
-                <input type="text" name="nomina" placeholder="Ingrese su Nómina (ej. 2887)" required style="padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px;">
-                <button type="submit" style="padding: 12px; background: #0033a0; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold;">Ingresar</button>
-            </form>
-        </div>
-    </body>
-    </html>
-    `);
-});
-
-// Ruta de Login (POST) - Ahora registra en automático cualquier nómina nueva
+// Ruta de Login
 app.post('/login', (req, res) => {
-    const nomina = req.body.nomina.trim();
-    if (!nomina) return res.redirect('/');
-
-    // Verificar si el usuario ya existe; si no, crearlo al vuelo para pruebas
+    const { nomina } = req.body;
     db.get('SELECT * FROM usuarios WHERE nomina = ?', [nomina], (err, user) => {
-        const continuarConLogin = (userData) => {
-            const fotoPath = `/fotos/${nomina}.png`;
+        if (!user) return res.status(401).send('<h2>Nómina no encontrada.</h2>');
+        
+        const fotoPath = `/fotos/${nomina}.png`;
 
-            const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
-                            JOIN asignaciones a ON c.id = a.id_curso 
-                            LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
-                            WHERE a.id_usuario = ? 
-                            ORDER BY c.categoria`;
-            
-            db.all(query, [nomina, nomina], (err, cursos) => {
-                let html = `
-                <!DOCTYPE html>
-                <html>
-                <head><link rel="stylesheet" href="style.css"></head>
-                <body>
-                    <header class="header-johnan">
-                        <img src="/logo_johnan.png" alt="Logo">
-                        <strong>Johnan de México</strong>
-                    </header>
+        // Consulta que agrupa por categoría
+        const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
+                        JOIN asignaciones a ON c.id = a.id_curso 
+                        LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
+                        WHERE a.id_usuario = ? 
+                        ORDER BY c.categoria`;
+        
+        db.all(query, [nomina, nomina], (err, cursos) => {
+            let html = `
+            <!DOCTYPE html>
+            <html>
+            <head><link rel="stylesheet" href="style.css"></head>
+            <body>
+                <header class="header-johnan">
+                    <img src="/logo_johnan.png" alt="Logo">
+                    <strong>Johnan de México</strong>
+                </header>
 
-                    <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="text-align: right;">
-                                <p style="margin:0; font-weight:bold; font-size: 14px;">${userData.nombre}</p>
-                                <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${userData.nomina}</p>
-                            </div>
-                            <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
+                <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="text-align: right;">
+                            <p style="margin:0; font-weight:bold; font-size: 14px;">${user.nombre}</p>
+                            <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${user.nomina}</p>
                         </div>
+                        <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
                     </div>
+                </div>
 
-                    <div class="card" style="margin-top: 20px;">
-                        <h1>Sus Cursos</h1>`;
-                
-                let categoriaActual = "";
-                cursos.forEach(c => {
-                    if (c.categoria !== categoriaActual) {
-                        categoriaActual = c.categoria;
-                        html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
-                    }
+                <div class="card" style="margin-top: 20px;">
+                    <h1>Sus Cursos</h1>`;
+            
+            let categoriaActual = "";
+            cursos.forEach(c => {
+                // Genera el título de la sección al cambiar de categoría
+                if (c.categoria !== categoriaActual) {
+                    categoriaActual = c.categoria;
+                    html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
+                }
 
-                    const esAprobado = (c.aprobado === 1);
-                    html += `<div class="li-item" style="margin-bottom: 10px;">
-                        <strong>${c.titulo}</strong>
-                        <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
-                            onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
-                            ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
-                        </button>
-                    </div>`;
-                });
-                
-                res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
+                const esAprobado = (c.aprobado === 1);
+                html += `<div class="li-item" style="margin-bottom: 10px;">
+                    <strong>${c.titulo}</strong>
+                    <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
+                        onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
+                        ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
+                    </button>
+                </div>`;
             });
-        };
-
-        if (!user) {
-            // Si la nómina no existe, la registramos automáticamente y le asignamos los 3 cursos
-            const nombreNuevo = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
-            db.run('INSERT INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreNew = nombreNuevo], () => {
-                db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
-                    continuarConLogin({ nomina, nombre: nombreNuevo });
-                });
-            });
-        } else {
-            // Asegurar que tenga cursos asignados por si acaso
-            db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
-                continuarConLogin(user);
-            });
-        }
+            
+            res.send(html + `</div><br><a href="/" style="color:#0033a0;">Cerrar Sesión</a></div></body></html>`);
+        });
     });
 });
 
-// Ruta para ver el curso
+// Ruta para ver el curso (Visualizador Inteligente)
 app.get('/ver-curso', (req, res) => {
     db.get('SELECT * FROM cursos WHERE id = ?', [req.query.id], (err, c) => {
         if (!c) return res.send("Curso no encontrado");
         
         let contenidoHtml = "";
 
+        // Lógica según el tipo de contenido
         if (c.tipo_contenido === 'video') {
-            contenidoHtml = `<video controls width="100%" style="max-height: 450px; border-radius: 8px; background: #000;"><source src="${c.url_recurso}" type="video/mp4">Tu navegador no soporta la reproducción de video.</video>`;
+            contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="400px" frameborder="0" allowfullscreen></iframe>`;
         } else if (c.tipo_contenido === 'presentacion') {
             contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="400px" frameborder="0"></iframe>`;
         } else if (c.tipo_contenido === 'pdf') {
@@ -151,21 +114,13 @@ app.get('/ver-curso', (req, res) => {
         <html>
         <head><link rel="stylesheet" href="style.css"></head>
         <body>
-            <div class="card" style="max-width: 900px; margin: auto; padding: 20px;">
+            <div class="card">
                 <h1>${c.titulo}</h1>
-                <hr>
-                
-                <h3>Contenido del Curso</h3>
                 ${contenidoHtml}
-                
                 <br><br>
-                <hr style="margin: 20px 0;">
-                
-                <h3>Evaluación del Curso</h3>
-                <iframe src="${c.url_form}" width="100%" height="500px" frameborder="0" marginwidth="0" marginheight="0" style="border: none; border-radius: 8px;">Cargando...</iframe>
-                
+                <a href="${c.url_form}" target="_blank" class="btn-primary" style="color:#0033a0; font-weight:bold;">ABRIR EXAMEN</a>
                 <br><br>
-                <a href="/" style="color:#0033a0; font-weight:bold;">Volver al panel</a>
+                <a href="/">Volver al panel</a>
             </div>
         </body>
         </html>`);
