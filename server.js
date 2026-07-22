@@ -4,6 +4,13 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const db = new sqlite3.Database('./empresa_v2.db');
 
+// Diccionario de nombres oficiales (Agrega aquí las nóminas y sus nombres reales)
+const nombresOficiales = {
+    '2887': 'Gerardo Misael Romero Aguilar',
+    '2393': 'Nombre Del Operador 2393', // <-- Cambia este por el nombre real de la nómina 2393
+    // Agrega más nóminas aquí según los necesites, ej: '1234': 'Juan Pérez',
+};
+
 // Configuración inicial de tablas
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
@@ -52,8 +59,8 @@ app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
 
-    // Definición directa del nombre según la nómina ingresada
-    const nombreMostrar = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
+    // Definición del nombre buscando en el diccionario oficial, o usando respaldo si no está registrado
+    const nombreMostrar = nombresOficiales[nomina] || `Colaborador Nómina ${nomina}`;
     const nominaMostrar = nomina;
     const fotoPath = `/fotos/${nominaMostrar}.png`;
 
