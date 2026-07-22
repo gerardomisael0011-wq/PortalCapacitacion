@@ -331,7 +331,12 @@ app.get('/ver-curso', (req, res) => {
         let contenidoHtml = "";
 
         if (c.tipo_contenido === 'video') {
-            contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="400px" frameborder="0" allowfullscreen></iframe>`;
+            // Soporta tanto iframes (YouTube) como videos directos (MP4)
+            if (c.url_recurso.includes('youtube.com') || c.url_recurso.includes('youtu.be')) {
+                contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="400px" frameborder="0" allowfullscreen></iframe>`;
+            } else {
+                contenidoHtml = `<video width="100%" height="400px" controls><source src="${c.url_recurso}" type="video/mp4">Tu navegador no soporta video.</video>`;
+            }
         } else if (c.tipo_contenido === 'presentacion') {
             contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="400px" frameborder="0"></iframe>`;
         } else if (c.tipo_contenido === 'pdf') {
@@ -345,13 +350,13 @@ app.get('/ver-curso', (req, res) => {
         <html>
         <head><link rel="stylesheet" href="style.css"></head>
         <body>
-            <div class="card">
+            <div class="card" style="max-width: 800px; margin: 20px auto; padding: 20px;">
                 <h1>${c.titulo}</h1>
                 ${contenidoHtml}
                 <br><br>
-                <a href="${c.url_form}" target="_blank" class="btn-primary" style="color:#0033a0; font-weight:bold;">ABRIR EXAMEN</a>
-                <br><br>
-                <a href="/">Volver al panel</a>
+                <a href="${c.url_form}" target="_blank" class="btn-primary" style="display: block; text-align: center; background: #0033a0; color: white; padding: 10px; text-decoration: none; border-radius: 5px; font-weight:bold;">ABRIR EXAMEN</a>
+                <br>
+                <a href="/" style="display: block; text-align: center; color:#0033a0; font-weight:bold;">Volver al panel</a>
             </div>
         </body>
         </html>`);
