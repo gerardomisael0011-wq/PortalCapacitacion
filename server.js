@@ -57,14 +57,18 @@ app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
 
-    const nombreDefinitivo = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
+    // Definimos el nombre que por ley debe llevar si no es el principal
+    const nombreFallback = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
     
-    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreDefinitivo], () => {
+    // Forzamos actualización absoluta en la BD para limpiar cualquier registro viejo o vacío
+    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, COALESCE((SELECT nombre FROM usuarios WHERE nomina = ?), ?))', 
+    [nomina, nomina, nombreFallback], () => {
+        
         db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
             
-            db.get('SELECT * FROM usuarios WHERE nomina = ?', [nomina], (err, user) => {
-                // Nos aseguramos de usar el objeto recuperado o el respaldo inmediato
-                const nombreMostrar = user ? user.nombre : nombreDefinitivo;
+            // Consultamos asegurando que si el nombre viene nulo o vacío, tome el formato correcto
+            db.get('SELECT nomina, COALESCE(NULLIF(nombre, ""), ?) AS nombre FROM usuarios WHERE nomina = ?', [nombreFallback, nomina], (err, user) => {
+                const nombreMostrar = user ? user.nombre : nombreFallback;
                 const nominaMostrar = user ? user.nomina : nomina;
                 const fotoPath = `/fotos/${nominaMostrar}.png`;
 
