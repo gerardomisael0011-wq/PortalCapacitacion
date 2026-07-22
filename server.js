@@ -222,10 +222,10 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Inserción de cursos base con sus categorías
+    // Inserción de cursos base (El curso 3 ahora es tipo 'video' con enlace de YouTube para pruebas)
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Capacitación de Calidad', 'Calidad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
 });
 
 app.use(bodyParser.json());
@@ -258,7 +258,7 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Ruta de Login (POST) con validación directa del diccionario de nombres oficiales
+// Ruta de Login (POST)
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
@@ -323,7 +323,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Ruta para ver el curso (Visualizador Inteligente)
+// Ruta para ver el curso (Visualizador Inteligente Actualizado)
 app.get('/ver-curso', (req, res) => {
     db.get('SELECT * FROM cursos WHERE id = ?', [req.query.id], (err, c) => {
         if (!c) return res.send("Curso no encontrado");
@@ -331,14 +331,13 @@ app.get('/ver-curso', (req, res) => {
         let contenidoHtml = "";
 
         if (c.tipo_contenido === 'video') {
-            // Soporta tanto iframes (YouTube) como videos directos (MP4)
             if (c.url_recurso.includes('youtube.com') || c.url_recurso.includes('youtu.be')) {
-                contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="400px" frameborder="0" allowfullscreen></iframe>`;
+                contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="450px" frameborder="0" allowfullscreen></iframe>`;
             } else {
-                contenidoHtml = `<video width="100%" height="400px" controls><source src="${c.url_recurso}" type="video/mp4">Tu navegador no soporta video.</video>`;
+                contenidoHtml = `<video width="100%" height="450px" controls><source src="${c.url_recurso}" type="video/mp4">Tu navegador no soporta video.</video>`;
             }
         } else if (c.tipo_contenido === 'presentacion') {
-            contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="400px" frameborder="0"></iframe>`;
+            contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="450px" frameborder="0"></iframe>`;
         } else if (c.tipo_contenido === 'pdf') {
             contenidoHtml = `<embed src="${c.url_recurso}" width="100%" height="600px" type="application/pdf">`;
         } else {
@@ -354,7 +353,7 @@ app.get('/ver-curso', (req, res) => {
                 <h1>${c.titulo}</h1>
                 ${contenidoHtml}
                 <br><br>
-                <a href="${c.url_form}" target="_blank" class="btn-primary" style="display: block; text-align: center; background: #0033a0; color: white; padding: 10px; text-decoration: none; border-radius: 5px; font-weight:bold;">ABRIR EXAMEN</a>
+                <a href="${c.url_form}" target="_blank" class="btn-primary" style="display: block; text-align: center; background: #0033a0; color: white; padding: 12px; text-decoration: none; border-radius: 6px; font-weight:bold;">ABRIR EXAMEN</a>
                 <br>
                 <a href="/" style="display: block; text-align: center; color:#0033a0; font-weight:bold;">Volver al panel</a>
             </div>
