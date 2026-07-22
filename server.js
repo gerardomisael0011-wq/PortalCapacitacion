@@ -7,19 +7,16 @@ const db = new sqlite3.Database('./empresa_v2.db');
 // Configuración inicial de tablas
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
-    
-    // Tabla con categoría y tipo de contenido
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
-    
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Inserción de cursos
+    // Inserción de cursos base
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', '/videos/curso.mp4', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Presentación ISO', 'Calidad', 'presentacion', 'https://docs.google.com/presentation/d/e/2PACX-1vQ/embed', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUODBQNjFKMDdORFVPWk1ZS0dTTlZOWUZaVC4u')");
 
-    // Inserción de usuario principal
+    // Usuario principal predeterminado
     db.run("INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES ('2887', 'Gerardo Misael Romero Aguilar')");
     db.run("INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES ('2887', 1), ('2887', 2), ('2887', 3)");
 });
@@ -30,7 +27,7 @@ app.use(express.static('public'));
 
 const CLAVE_SECRETA = "MI_CLAVE_SECRETA_123";
 
-// Ruta raíz para servir la pantalla de login directamente
+// Ruta raíz para la pantalla de Login
 app.get('/', (req, res) => {
     res.send(`
     <!DOCTYPE html>
@@ -54,63 +51,81 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Ruta de Login (POST)
+// Ruta de Login (POST) - Ahora registra en automático cualquier nómina nueva
 app.post('/login', (req, res) => {
-    const nomina = req.body.nomina;
+    const nomina = req.body.nomina.trim();
+    if (!nomina) return res.redirect('/');
+
+    // Verificar si el usuario ya existe; si no, crearlo al vuelo para pruebas
     db.get('SELECT * FROM usuarios WHERE nomina = ?', [nomina], (err, user) => {
-        if (!user) return res.send('<script>alert("Nómina no encontrada"); window.location.href="/";</script>');
-        
-        const fotoPath = `/fotos/${nomina}.png`;
+        const continuarConLogin = (userData) => {
+            const fotoPath = `/fotos/${nomina}.png`;
 
-        const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
-                        JOIN asignaciones a ON c.id = a.id_curso 
-                        LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
-                        WHERE a.id_usuario = ? 
-                        ORDER BY c.categoria`;
-        
-        db.all(query, [nomina, nomina], (err, cursos) => {
-            let html = `
-            <!DOCTYPE html>
-            <html>
-            <head><link rel="stylesheet" href="style.css"></head>
-            <body>
-                <header class="header-johnan">
-                    <img src="/logo_johnan.png" alt="Logo">
-                    <strong>Johnan de México</strong>
-                </header>
+            const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
+                            JOIN asignaciones a ON c.id = a.id_curso 
+                            LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
+                            WHERE a.id_usuario = ? 
+                            ORDER BY c.categoria`;
+            
+            db.all(query, [nomina, nomina], (err, cursos) => {
+                let html = `
+                <!DOCTYPE html>
+                <html>
+                <head><link rel="stylesheet" href="style.css"></head>
+                <body>
+                    <header class="header-johnan">
+                        <img src="/logo_johnan.png" alt="Logo">
+                        <strong>Johnan de México</strong>
+                    </header>
 
-                <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="text-align: right;">
-                            <p style="margin:0; font-weight:bold; font-size: 14px;">${user.nombre}</p>
-                            <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${user.nomina}</p>
+                    <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="text-align: right;">
+                                <p style="margin:0; font-weight:bold; font-size: 14px;">${userData.nombre}</p>
+                                <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${userData.nomina}</p>
+                            </div>
+                            <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
                         </div>
-                        <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
                     </div>
-                </div>
 
-                <div class="card" style="margin-top: 20px;">
-                    <h1>Sus Cursos</h1>`;
-            
-            let categoriaActual = "";
-            cursos.forEach(c => {
-                if (c.categoria !== categoriaActual) {
-                    categoriaActual = c.categoria;
-                    html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
-                }
+                    <div class="card" style="margin-top: 20px;">
+                        <h1>Sus Cursos</h1>`;
+                
+                let categoriaActual = "";
+                cursos.forEach(c => {
+                    if (c.categoria !== categoriaActual) {
+                        categoriaActual = c.categoria;
+                        html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
+                    }
 
-                const esAprobado = (c.aprobado === 1);
-                html += `<div class="li-item" style="margin-bottom: 10px;">
-                    <strong>${c.titulo}</strong>
-                    <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
-                        onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
-                        ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
-                    </button>
-                </div>`;
+                    const esAprobado = (c.aprobado === 1);
+                    html += `<div class="li-item" style="margin-bottom: 10px;">
+                        <strong>${c.titulo}</strong>
+                        <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
+                            onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
+                            ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
+                        </button>
+                    </div>`;
+                });
+                
+                res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
             });
-            
-            res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
-        });
+        };
+
+        if (!user) {
+            // Si la nómina no existe, la registramos automáticamente y le asignamos los 3 cursos
+            const nombreNuevo = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
+            db.run('INSERT INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreNew = nombreNuevo], () => {
+                db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
+                    continuarConLogin({ nomina, nombre: nombreNuevo });
+                });
+            });
+        } else {
+            // Asegurar que tenga cursos asignados por si acaso
+            db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
+                continuarConLogin(user);
+            });
+        }
     });
 });
 
