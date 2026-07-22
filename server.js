@@ -52,19 +52,21 @@ app.get('/', (req, res) => {
 });
 
 // Ruta de Login (POST) con actualización forzada de nombre
+// Ruta de Login (POST) optimizada para renderizar los datos correctamente
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
 
-    // Definimos el nombre correcto de forma estricta según la nómina ingresada
     const nombreDefinitivo = nomina === '2887' ? 'Gerardo Misael Romero Aguilar' : `Colaborador Nómina ${nomina}`;
     
-    // Usamos INSERT OR REPLACE para asegurarnos de que el nombre SIEMPRE se actualice bien en la BD
     db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreDefinitivo], () => {
         db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nomina, nomina, nomina], () => {
             
             db.get('SELECT * FROM usuarios WHERE nomina = ?', [nomina], (err, user) => {
-                const fotoPath = `/fotos/${nomina}.png`;
+                // Nos aseguramos de usar el objeto recuperado o el respaldo inmediato
+                const nombreMostrar = user ? user.nombre : nombreDefinitivo;
+                const nominaMostrar = user ? user.nomina : nomina;
+                const fotoPath = `/fotos/${nominaMostrar}.png`;
 
                 const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
                                 JOIN asignaciones a ON c.id = a.id_curso 
@@ -72,7 +74,7 @@ app.post('/login', (req, res) => {
                                 WHERE a.id_usuario = ? 
                                 ORDER BY c.categoria`;
                 
-                db.all(query, [nomina, nomina], (err, cursos) => {
+                db.all(query, [nominaMostrar, nominaMostrar], (err, cursos) => {
                     let html = `
                     <!DOCTYPE html>
                     <html>
@@ -86,8 +88,8 @@ app.post('/login', (req, res) => {
                         <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <div style="text-align: right;">
-                                    <p style="margin:0; font-weight:bold; font-size: 14px;">${user ? user.nombre : nombreDefinitivo}</p>
-                                    <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${nomina}</p>
+                                    <p style="margin:0; font-weight:bold; font-size: 14px;">${nombreMostrar}</p>
+                                    <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${nominaMostrar}</p>
                                 </div>
                                 <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
                             </div>
