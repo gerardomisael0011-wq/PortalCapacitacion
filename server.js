@@ -215,14 +215,17 @@ const nombresOficiales = {
     '2897': 'GALVAN MARES FERNANDO'
 };
 
-// Configuración inicial de tablas
+// Configuración inicial de tablas con restricciones y limpieza de duplicados
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
-    db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER)");
+    db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER, PRIMARY KEY(id_usuario, id_curso))");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Inserción de cursos base (El curso 3 ahora es tipo 'video' con enlace de YouTube para pruebas)
+    // Limpia cualquier duplicado previo en la base de datos
+    db.run("DELETE FROM asignaciones WHERE rowid NOT IN (SELECT MIN(rowid) FROM asignaciones GROUP BY id_usuario, id_curso)");
+
+    // Inserción de cursos base
     db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Capacitación de Calidad', 'Calidad', 'video', '/videos/calidad.mp4', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUN0lMU0VHTERZUTdNM1FYUURNMDIxOFpFSy4u')");
