@@ -230,7 +230,9 @@ db.serialize(() => {
     db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos y Calidad', 'Operaciones', 'pdf', '/videos/manual.pdf', 'https://forms.gle/EXAMEN_2')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Inducción General de Planta', 'RH', 'video', '/videos/induccion.mp4', 'https://forms.gle/EXAMEN_3')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (4, 'Uso Correcto de EPP', 'Seguridad', 'presentacion', '/videos/epp.pdf', 'https://forms.gle/EXAMEN_4')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (5, 'KAISEN', 'Kaisen', 'video', '/videos/KAIZEN.mp4', 'https://forms.gle/bWTvtgxigDP6dYT1A')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (5, 'Kaisen', 'KAISEN', 'video', '/videos/KAIZEN.mp4', 'https://forms.gle/bWTvtgxigDP6dYT1A')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (6, 'Listado de Verificacion DE 5´S', 'KAISEN', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', 'https://forms.gle/fQUMCP98B4sLxZCe9')");
+    
 });
 
 // 2. MAPA DE ASIGNACIONES: Define exactamente qué ID(s) de curso le tocan a cada Nómina
