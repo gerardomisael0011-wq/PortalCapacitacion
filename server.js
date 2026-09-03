@@ -237,7 +237,7 @@ db.serialize(() => {
 
 // 2. MAPA DE ASIGNACIONES: Define exactamente qué ID(s) de curso le tocan a cada Nómina
 const cursosPorNomina = {
-    '2887': [1, 5], // Gerardo verá solo los cursos 1, 2 y 4
+    '2887': [1, 5, 6], // Gerardo verá solo los cursos 1, 2 y 4
     '1011': [2, 3],    // Gilberto verá solo el 2 y el 3
     '1018': [1, 3, 4],  // Norma verá solo el 1, 3 y 4
     '1037': [2, 3],
