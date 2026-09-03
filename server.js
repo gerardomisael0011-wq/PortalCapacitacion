@@ -4,7 +4,7 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const db = new sqlite3.Database('./empresa_v2.db');
 
-// Diccionario completo de personal de Johnan de México
+// Diccionario de personal de Johnan de México
 const nombresOficiales = {
     '1011': 'GILBERTO ABARCA DAMIAN',
     '1018': 'NORMA MARCELA GASCA NAVARRO',
@@ -215,21 +215,30 @@ const nombresOficiales = {
     '2897': 'GALVAN MARES FERNANDO'
 };
 
-// Configuración inicial de tablas con restricciones y limpieza de duplicados
+// 1. Catálogo General de Cursos (Registra aquí todos tus cursos con sus archivos y forms)
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER, PRIMARY KEY(id_usuario, id_curso))");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
-    // Limpia cualquier duplicado previo en la base de datos
+    // Limpieza de duplicados previos por seguridad
     db.run("DELETE FROM asignaciones WHERE rowid NOT IN (SELECT MIN(rowid) FROM asignaciones GROUP BY id_usuario, id_curso)");
 
-    // Inserción de cursos base
-    db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad', 'Seguridad', 'video', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos', 'Operaciones', 'pdf', 'https://www.africau.edu/images/default/sample.pdf', 'https://forms.gle/jPLf2fcevrjqAGs1A')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Capacitación de Calidad', 'Calidad', 'video', '/videos/calidad.mp4', 'https://forms.office.com/Pages/ResponsePage.aspx?id=64xBAHO6kUeKLjKiNVcFt_1hOd-Sn7JHtXT0dG_x6GNUN0lMU0VHTERZUTdNM1FYUURNMDIxOFpFSy4u')");
+    // Ejemplos de tus cursos (puedes agregar cuantos quieras, mezclando videos locales, PDFs, presentaciones, etc.)
+    db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad Industrial', 'Seguridad', 'video', '/videos/seguridad.mp4', 'https://forms.gle/EXAMEN_1')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos y Calidad', 'Operaciones', 'pdf', '/videos/manual.pdf', 'https://forms.gle/EXAMEN_2')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Inducción General de Planta', 'RH', 'video', '/videos/induccion.mp4', 'https://forms.gle/EXAMEN_3')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (4, 'Uso Correcto de EPP', 'Seguridad', 'presentacion', '/videos/epp.pdf', 'https://forms.gle/EXAMEN_4')");
 });
+
+// 2. MAPA DE ASIGNACIONES: Define exactamente qué ID(s) de curso le tocan a cada Nómina
+const cursosPorNomina = {
+    '2887': [1, 2, 4], // Gerardo verá solo los cursos 1, 2 y 4
+    '1011': [2, 3],    // Gilberto verá solo el 2 y el 3
+    '1018': [1, 3, 4]  // Norma verá solo el 1, 3 y 4
+    // Si una nómina no está escrita aquí, no se le asignará ningún curso por defecto.
+};
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -261,72 +270,89 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Ruta de Login (POST)
+// Ruta de Login (POST) - Filtra y asigna los cursos correspondientes
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
 
     const nombreMostrar = nombresOficiales[nomina] || `Colaborador Nómina ${nomina}`;
-    const nominaMostrar = nomina;
-    const fotoPath = `/fotos/${nominaMostrar}.png`;
+    const fotoPath = `/fotos/${nomina}.png`;
 
-    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nominaMostrar, nombreMostrar], () => {
-        db.run('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, 1), (?, 2), (?, 3)', [nominaMostrar, nominaMostrar, nominaMostrar], () => {
+    db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreMostrar], () => {
+        
+        // Extraemos la lista de ID de cursos configurados para esta nómina (si no tiene, devuelve arreglo vacío)
+        const misCursosAsignados = cursosPorNomina[nomina] || [];
+
+        // Borramos asignaciones previas de este usuario para sincronizar con los cambios recientes
+        db.run('DELETE FROM asignaciones WHERE id_usuario = ?', [nomina], () => {
             
-            const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
-                            JOIN asignaciones a ON c.id = a.id_curso 
-                            LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
-                            WHERE a.id_usuario = ? 
-                            ORDER BY c.categoria`;
-            
-            db.all(query, [nominaMostrar, nominaMostrar], (err, cursos) => {
-                let html = `
-                <!DOCTYPE html>
-                <html>
-                <head><link rel="stylesheet" href="style.css"></head>
-                <body>
-                    <header class="header-johnan">
-                        <img src="/logo_johnan.png" alt="Logo">
-                        <strong>Johnan de México</strong>
-                    </header>
+            // Insertamos exclusivamente sus cursos correspondientes
+            const stmt = db.prepare('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, ?)');
+            misCursosAsignados.forEach(idCurso => {
+                stmt.run(nomina, idCurso);
+            });
+            stmt.finalize(() => {
 
-                    <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="text-align: right;">
-                                <p style="margin:0; font-weight:bold; font-size: 14px;">${nombreMostrar}</p>
-                                <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${nominaMostrar}</p>
-                            </div>
-                            <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
-                        </div>
-                    </div>
-
-                    <div class="card" style="margin-top: 20px;">
-                        <h1>Sus Cursos</h1>`;
+                // Consultamos únicamente los cursos que pertenecen a este usuario en la base de datos
+                const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
+                                JOIN asignaciones a ON c.id = a.id_curso 
+                                LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
+                                WHERE a.id_usuario = ? 
+                                ORDER BY c.categoria`;
                 
-                let categoriaActual = "";
-                cursos.forEach(c => {
-                    if (c.categoria !== categoriaActual) {
-                        categoriaActual = c.categoria;
-                        html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
+                db.all(query, [nomina, nomina], (err, cursos) => {
+                    let html = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head><link rel="stylesheet" href="style.css"></head>
+                    <body>
+                        <header class="header-johnan">
+                            <img src="/logo_johnan.png" alt="Logo">
+                            <strong>Johnan de México</strong>
+                        </header>
+
+                        <div style="position: fixed; top: 10px; right: 20px; z-index: 1001; background: white; padding: 8px 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: right;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="text-align: right;">
+                                    <p style="margin:0; font-weight:bold; font-size: 14px;">${nombreMostrar}</p>
+                                    <p style="margin:0; font-size: 11px; color: #666;">Nómina: ${nomina}</p>
+                                </div>
+                                <img src="${fotoPath}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.src='/logo_johnan.png'">
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-top: 20px;">
+                            <h1>Mis Cursos Asignados</h1>`;
+                    
+                    if (cursos.length === 0) {
+                        html += `<p style="text-align: center; color: #666; padding: 20px;">No tienes cursos asignados actualmente.</p>`;
                     }
 
-                    const esAprobado = (c.aprobado === 1);
-                    html += `<div class="li-item" style="margin-bottom: 10px;">
-                        <strong>${c.titulo}</strong>
-                        <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
-                            onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
-                            ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
-                        </button>
-                    </div>`;
+                    let categoriaActual = "";
+                    cursos.forEach(c => {
+                        if (c.categoria !== categoriaActual) {
+                            categoriaActual = c.categoria;
+                            html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
+                        }
+
+                        const esAprobado = (c.aprobado === 1);
+                        html += `<div class="li-item" style="margin-bottom: 10px;">
+                            <strong>${c.titulo}</strong>
+                            <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
+                                onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
+                                ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
+                            </button>
+                        </div>`;
+                    });
+                    
+                    res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
                 });
-                
-                res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
             });
         });
     });
 });
 
-// Ruta para ver el curso (Visualizador Inteligente Actualizado)
+// Ruta para visualizar el contenido del curso (videos locales, PDFs o presentaciones)
 app.get('/ver-curso', (req, res) => {
     db.get('SELECT * FROM cursos WHERE id = ?', [req.query.id], (err, c) => {
         if (!c) return res.send("Curso no encontrado");
@@ -337,28 +363,33 @@ app.get('/ver-curso', (req, res) => {
             if (c.url_recurso.includes('youtube.com') || c.url_recurso.includes('youtu.be')) {
                 contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="450px" frameborder="0" allowfullscreen></iframe>`;
             } else {
-                contenidoHtml = `<video width="100%" height="450px" controls><source src="${c.url_recurso}" type="video/mp4">Tu navegador no soporta video.</video>`;
+                contenidoHtml = `
+                <video width="100%" height="450px" controls controlsList="nodownload">
+                    <source src="${c.url_recurso}" type="video/mp4">
+                    Tu navegador no soporta la reproducción de video.
+                </video>`;
             }
-        } else if (c.tipo_contenido === 'presentacion') {
-            contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="450px" frameborder="0"></iframe>`;
-        } else if (c.tipo_contenido === 'pdf') {
+        } else if (c.tipo_contenido === 'presentacion' || c.tipo_contenido === 'pdf') {
             contenidoHtml = `<embed src="${c.url_recurso}" width="100%" height="600px" type="application/pdf">`;
         } else {
-            contenidoHtml = `<a href="${c.url_recurso}" target="_blank">Abrir material en una ventana nueva</a>`;
+            contenidoHtml = `<a href="${c.url_recurso}" target="_blank" style="padding: 10px 20px; background: #0033a0; color: white; text-decoration: none; border-radius: 5px;">Abrir material</a>`;
         }
 
         res.send(`
         <!DOCTYPE html>
         <html>
         <head><link rel="stylesheet" href="style.css"></head>
-        <body>
-            <div class="card" style="max-width: 800px; margin: 20px auto; padding: 20px;">
-                <h1>${c.titulo}</h1>
-                ${contenidoHtml}
-                <br><br>
-                <a href="${c.url_form}" target="_blank" class="btn-primary" style="display: block; text-align: center; background: #0033a0; color: white; padding: 12px; text-decoration: none; border-radius: 6px; font-weight:bold;">ABRIR EXAMEN</a>
-                <br>
-                <a href="/" style="display: block; text-align: center; color:#0033a0; font-weight:bold;">Volver al panel</a>
+        <body style="background: #f4f7f6; font-family: Arial, sans-serif;">
+            <div class="card" style="max-width: 800px; margin: 30px auto; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h1 style="color: #0033a0; margin-top: 0;">${c.titulo}</h1>
+                <div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+                    ${contenidoHtml}
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="${c.url_form}" target="_blank" style="display: inline-block; background: #28a745; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; margin-bottom: 15px;">ABRIR EXAMEN DEL CURSO</a>
+                    <br>
+                    <a href="/" style="color:#0033a0; font-weight:bold; text-decoration: none;">← Volver al panel de cursos</a>
+                </div>
             </div>
         </body>
         </html>`);
