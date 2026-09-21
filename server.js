@@ -215,6 +215,8 @@ const nombresOficiales = {
     '2897': 'GALVAN MARES FERNANDO'
 };
 
+// Forzar actualización de cursos en Render
+
 // 1. Catálogo General de Cursos (Registra aquí todos tus cursos con sus archivos y forms)
 db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
@@ -223,7 +225,7 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
     db.run("DELETE FROM cursos");
-    
+
     // Limpieza de duplicados previos por seguridad
     db.run("DELETE FROM asignaciones WHERE rowid NOT IN (SELECT MIN(rowid) FROM asignaciones GROUP BY id_usuario, id_curso)");
 
