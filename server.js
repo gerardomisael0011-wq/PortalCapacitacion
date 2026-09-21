@@ -251,7 +251,19 @@ db.serialize(() => {
     db.run("INSERT OR REPLACE INTO cursos VALUES (19, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (20, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (21, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
+
+    // Forzar la recreación automática de asignaciones basadas en el objeto actual
+    db.run("DELETE FROM asignaciones");
+    const stmt = db.prepare("INSERT OR REPLACE INTO asignaciones (id_usuario, id_curso) VALUES (?, ?)");
+    for (const [nomina, cursos] of Object.entries(cursosPorNomina)) {
+        for (const cursoId of cursos) {
+            stmt.run(nomina, cursoId);
+        }
+    }
+    stmt.finalize();
+
 });
+
 
 // 2. MAPA DE ASIGNACIONES: Define exactamente qué ID(s) de curso le tocan a cada Nómina
 const cursosPorNomina = {
