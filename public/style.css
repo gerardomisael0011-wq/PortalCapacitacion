@@ -1,0 +1,145 @@
+/* public/style.css */
+:root {
+    --primary-blue: #0033a0;
+    --success-green: #059669;
+    --bg-light: #f4f7f9;
+    --card-bg: #ffffff;
+    --text-main: #111827;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    margin: 0;
+    padding-top: 100px; /* Espacio para que el header fijo no tape el contenido */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Marca de agua de fondo */
+body::before {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px; 
+    height: 400px;
+    background-image: url('/logo_johnan.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.15;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* --- CABECERA CORPORATIVA --- */
+.header-johnan {
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 80px;
+    background: white; 
+    border-bottom: 2px solid #e2e8f0;
+    display: flex; 
+    align-items: center; 
+    padding: 0 20px;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.header-johnan img {
+    height: 50px;
+    width: auto;
+    margin-right: 15px;
+}
+
+/* --- TARJETA PRINCIPAL --- */
+.card {
+    background: var(--card-bg);
+    padding: 35px;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 90%;
+    max-width: 900px; /* Ampliado para que la lista de cursos respire mejor */
+    text-align: center;
+    margin-bottom: 50px;
+    box-sizing: border-box;
+}
+
+/* --- FORMULARIO Y BOTONES GENERALES --- */
+input {
+    width: 100%; padding: 16px; margin: 20px 0;
+    border: 2px solid #e2e8f0; border-radius: 12px;
+    font-size: 1rem; box-sizing: border-box;
+}
+
+button {
+    border: none; border-radius: 12px;
+    font-weight: 700; color: white; cursor: pointer; transition: 0.2s;
+}
+
+/* --- LISTA DE CURSOS --- */
+.course-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    margin-top: 30px; 
+}
+
+.li-item {
+    background: #f8fafc; 
+    border: 1px solid #e2e8f0; 
+    padding: 18px 22px;
+    border-radius: 12px; 
+    display: flex; 
+    justify-content: space-between;
+    align-items: center; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    gap: 20px;
+}
+
+/* Asegura que el texto del curso se acomode ordenadamente y no brinque al botón */
+.li-item strong {
+    font-size: 16px;
+    color: var(--text-main);
+    flex: 1;
+    text-align: left;
+    word-break: break-word;
+}
+
+/* --- ESTILOS ESPECÍFICOS DE BOTONES DE CURSOS --- */
+.btn-pending { 
+    background-color: var(--primary-blue); 
+    padding: 10px 20px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+.btn-pending:hover { 
+    background-color: #002680; 
+}
+
+.btn-approved { 
+    background-color: var(--success-green); 
+    cursor: not-allowed; 
+    padding: 10px 20px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* --- TÍTULOS DE CATEGORÍAS (Calidad, Seguridad, etc.) --- */
+h2 {
+    text-align: left;
+    color: var(--primary-blue);
+    margin-top: 30px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 6px;
+    font-size: 18px;
+}
