@@ -237,7 +237,7 @@ db.serialize(() => {
     db.run("INSERT OR REPLACE INTO cursos VALUES (9, 'Objetivos ambientales', 'AMBIENTAL', 'video', '/videos/Objetivos ambientales.mp4', 'https://forms.gle/bzypAVUH3VNSD5hD6')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (10, 'Recuerda reportar', 'AMBIENTAL', 'video', '/videos/Recuerda reportar.mp4', '')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (11, 'Sustancias químicas', 'AMBIENTAL', 'video', '/videos/Sustancias químicas.mp4', 'https://forms.gle/ppHVdZpFbpPB637WA')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (12, 'Infografia_Aviso_Ausencias', 'RH', 'video', '/videos/.mp4', '')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (12, 'Infografia_Aviso_Ausencias', 'RH', 'pdf', '/videos/Infografia_Aviso_Ausencias.pdf', '')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (13, 'Alertas de calidad', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Alertas de calidad.mp4', 'https://forms.gle/TJmbox5MCzzbh9HFA')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (14, 'Auditorias de proceso', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Auditorias de proceso.mp4', 'https://forms.gle/8LQuJn7EFwEfgwVd9')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (15, 'Control de cambios de 4 M's', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/1. Control de cambios de 4 M's.mp4', 'https://forms.gle/93gwj7PaJUpJcEfbA')");
@@ -519,7 +519,7 @@ app.post('/login', (req, res) => {
                                 JOIN asignaciones a ON c.id = a.id_curso 
                                 LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
                                 WHERE a.id_usuario = ? 
-                                ORDER BY c.categoria`;
+                                ORDER BY c.categoria, c.id`;
                 
                 db.all(query, [nomina, nomina], (err, cursos) => {
                     let html = `
