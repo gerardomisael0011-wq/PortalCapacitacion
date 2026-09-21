@@ -251,6 +251,7 @@ db.serialize(() => {
     db.run("INSERT OR REPLACE INTO cursos VALUES (19, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (20, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
     db.run("INSERT OR REPLACE INTO cursos VALUES (21, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
+    db.run("INSERT OR REPLACE INTO cursos VALUES (22, 'Reglamento', 'RH', 'pdf', '/videos/REGLAMENTO.pdf', 'https://forms.gle/bCiff5CA1Vt3aAV56')");
 
     // Forzar la recreación automática de asignaciones basadas en el objeto actual
     db.run("DELETE FROM asignaciones");
