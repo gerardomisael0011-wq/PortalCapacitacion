@@ -222,6 +222,8 @@ db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER, PRIMARY KEY(id_usuario, id_curso))");
     db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
 
+    db.run("DELETE FROM cursos");
+    
     // Limpieza de duplicados previos por seguridad
     db.run("DELETE FROM asignaciones WHERE rowid NOT IN (SELECT MIN(rowid) FROM asignaciones GROUP BY id_usuario, id_curso)");
 
