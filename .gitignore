@@ -1,5 +1,4 @@
 node_modules/
-public/videos/curso.mp4
 *.db
 .env
-public/videos/
+public/videos/*.mp4

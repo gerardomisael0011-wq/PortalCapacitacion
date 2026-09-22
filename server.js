@@ -566,13 +566,21 @@ app.get('/ver-curso', (req, res) => {
                 contenidoHtml = `<iframe src="${c.url_recurso}" width="100%" height="450px" frameborder="0" allowfullscreen></iframe>`;
             } else {
                 contenidoHtml = `
-                <video width="100%" height="450px" controls controlsList="nodownload">
-                    <source src="${c.url_recurso}" type="video/mp4">
-                    Tu navegador no soporta la reproducción de video.
-                </video>`;
+                <div style="background: #000; border-radius: 8px; overflow: hidden;">
+                    <video width="100%" height="450px" controls controlsList="nodownload">
+                        <source src="${c.url_recurso}" type="video/mp4">
+                        Tu navegador no soporta la reproducción de video.
+                    </video>
+                </div>`;
             }
         } else if (c.tipo_contenido === 'presentacion' || c.tipo_contenido === 'pdf') {
-            contenidoHtml = `<embed src="${c.url_recurso}" width="100%" height="600px" type="application/pdf">`;
+            contenidoHtml = `
+            <div style="width: 100%; height: 650px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
+                <iframe src="${c.url_recurso}" width="100%" height="100%" style="border: none;">
+                    Tu navegador no soporta la vista previa del PDF. 
+                    <a href="${c.url_recurso}" target="_blank">Haz clic aquí para descargarlo/verlo.</a>
+                </iframe>
+            </div>`;
         } else {
             contenidoHtml = `<a href="${c.url_recurso}" target="_blank" style="padding: 10px 20px; background: #0033a0; color: white; text-decoration: none; border-radius: 5px;">Abrir material</a>`;
         }
@@ -582,14 +590,13 @@ app.get('/ver-curso', (req, res) => {
         <html>
         <head><link rel="stylesheet" href="style.css"></head>
         <body style="background: #f4f7f6; font-family: Arial, sans-serif;">
-            <div class="card" style="max-width: 800px; margin: 30px auto; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <div class="card" style="max-width: 850px; margin: 30px auto; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
                 <h1 style="color: #0033a0; margin-top: 0;">${c.titulo}</h1>
-                <div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+                <div style="margin-bottom: 20px;">
                     ${contenidoHtml}
                 </div>
                 <div style="text-align: center; margin-top: 20px;">
-                    <a href="${c.url_form}" target="_blank" style="display: inline-block; background: #28a745; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; margin-bottom: 15px;">ABRIR EXAMEN DEL CURSO</a>
-                    <br>
+                    ${c.url_form ? `<a href="${c.url_form}" target="_blank" style="display: inline-block; background: #28a745; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; margin-bottom: 15px;">ABRIR EXAMEN DEL CURSO</a><br>` : ''}
                     <a href="/" style="color:#0033a0; font-weight:bold; text-decoration: none;">← Volver al panel de cursos</a>
                 </div>
             </div>
