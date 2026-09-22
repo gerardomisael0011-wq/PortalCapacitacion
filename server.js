@@ -182,7 +182,8 @@ const nombresOficiales = {
     '2890': 'AGUILAR ANGUIANO GUADALUPE DEL ROCIO',
     '2894': 'MARIN VILCHIS ANGELA EUGENIA',
     '2895': 'BONILLA SANCHEZ CRISTINA',
-    '2897': 'GALVAN MARES FERNANDO'
+    '2897': 'GALVAN MARES FERNANDO',
+    '2899': 'RODRIGUEZ ALVAREZ ERIKA DEL PILAR'
 };
 
 // Forzar actualización de cursos en Render
@@ -394,7 +395,8 @@ const cursosPorNomina = {
     '2894': [22],
     '2895': [22],
     '2896': [22],
-    '2897': [22]
+    '2897': [22],
+    '2899': []
     // Si una nómina no está escrita aquí, no se le asignará ningún curso por defecto.
 };
 
