@@ -191,7 +191,7 @@ const cursosPorNomina = {
     '2887': [22], // Gerardo verá solo los cursos 1, 2 y 4
     '1011': [22],    // Gilberto verá solo el 2 y el 3
     '1018': [22],  // Norma verá solo el 1, 3 y 4
-    '1037': [2, 3],
+    '1037': [22],
     '1047': [],
     '1051': [],
     '1102': [],
