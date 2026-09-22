@@ -188,7 +188,7 @@ const nombresOficiales = {
 // Forzar actualización de cursos en Render
 
 const cursosPorNomina = {
-    '2887': [22, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 
+    '2887': [22, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17], 
     '1011': [22],    
     '1018': [22], 
     '1037': [22],
@@ -422,7 +422,7 @@ db.serialize(() => {
         [9, 'Objetivos ambientales', 'AMBIENTAL', 'video', '/videos/Objetivos ambientales.mp4', 'https://forms.gle/bzypAVUH3VNSD5hD6'],
         [10, 'Recuerda reportar', 'AMBIENTAL', 'video', '/videos/Recuerda reportar.mp4', ''],
         [11, 'Sustancias químicas', 'AMBIENTAL', 'video', '/videos/Sustancias químicas.mp4', 'https://forms.gle/ppHVdZpFbpPB637WA'],
-        [12, 'Infografia_Aviso_Ausencias', 'RH', 'pdf', '/videos/Infografia_Aviso_Ausencias.pdf', ''],
+        //[12, 'Infografia_Aviso_Ausencias', 'RH', 'pdf', '/videos/Infografia_Aviso_Ausencias.pdf', ''],
         [13, 'Alertas de calidad', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Alertas de calidad.mp4', 'https://forms.gle/TJmbox5MCzzbh9HFA'],
         [14, 'Auditorias de proceso', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Auditorias de proceso.mp4', 'https://forms.gle/8LQuJn7EFwEfgwVd9'],
         [15, "Control de cambios de 4 M's", 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/1. Control de cambios de 4 M\'s.mp4', 'https://forms.gle/93gwj7PaJUpJcEfbA'],
