@@ -188,9 +188,9 @@ const nombresOficiales = {
 // Forzar actualización de cursos en Render
 
 const cursosPorNomina = {
-    '2887': [22, 13], // Gerardo verá solo los cursos 1, 2 y 4
-    '1011': [22],    // Gilberto verá solo el 2 y el 3
-    '1018': [22],  // Norma verá solo el 1, 3 y 4
+    '2887': [22, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 
+    '1011': [22],    
+    '1018': [22], 
     '1037': [22],
     '1047': [22],
     '1051': [22],
@@ -411,10 +411,10 @@ db.serialize(() => {
     const stmtCurso = db.prepare("INSERT OR REPLACE INTO cursos VALUES (?, ?, ?, ?, ?, ?)");
     
     const listaCursos = [
-        [1, 'Curso de Seguridad Industrial', 'Seguridad', 'video', '/videos/seguridad.mp4', 'https://forms.gle/EXAMEN_1'],
-        [2, 'Manual de Procesos y Calidad', 'Operaciones', 'pdf', '/videos/manual.pdf', 'https://forms.gle/EXAMEN_2'],
-        [3, 'Inducción General de Planta', 'RH', 'video', '/videos/induccion.mp4', 'https://forms.gle/EXAMEN_3'],
-        [4, 'Uso Correcto de EPP', 'Seguridad', 'presentacion', '/videos/epp.pdf', 'https://forms.gle/EXAMEN_4'],
+        //[1, 'Curso de Seguridad Industrial', 'Seguridad', 'video', '/videos/seguridad.mp4', 'https://forms.gle/EXAMEN_1'],
+        //[2, 'Manual de Procesos y Calidad', 'Operaciones', 'pdf', '/videos/manual.pdf', 'https://forms.gle/EXAMEN_2'],
+        //[3, 'Inducción General de Planta', 'RH', 'video', '/videos/induccion.mp4', 'https://forms.gle/EXAMEN_3'],
+        //[4, 'Uso Correcto de EPP', 'Seguridad', 'presentacion', '/videos/epp.pdf', 'https://forms.gle/EXAMEN_4'],
         [5, 'Kaisen', 'KAISEN', 'video', '/videos/KAIZEN.mp4', 'https://forms.gle/bWTvtgxigDP6dYT1A'],
         [6, 'Listado de Verificacion DE 5´S', 'KAISEN', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', 'https://forms.gle/fQUMCP98B4sLxZCe9'],
         [7, 'Aspectos Ambientales', 'AMBIENTAL', 'video', '/videos/Aspectos ambientales.mp4', ''],
@@ -428,10 +428,10 @@ db.serialize(() => {
         [15, "Control de cambios de 4 M's", 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/1. Control de cambios de 4 M\'s.mp4', 'https://forms.gle/93gwj7PaJUpJcEfbA'],
         [16, 'Control documental', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Control documental.mp4', 'https://forms.gle/R2LzXioDjWRaRgqQ8'],
         [17, 'Infografia_Aviso_Ausencias', 'RH', 'video', '/videos/Infografia_Aviso_Ausencias.mp4', ''],
-        [18, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
-        [19, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
-        [20, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
-        [21, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        //[18, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        //[19, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        //[20, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        //[21, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
         [22, 'Reglamento', 'RH', 'pdf', '/videos/REGLAMENTO.pdf', 'https://forms.gle/bCiff5CA1Vt3aAV56']
     ];
 
