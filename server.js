@@ -53,7 +53,6 @@ const nombresOficiales = {
     '1608': 'JUANA DELIA VAZQUEZ QUIJAS',
     '1621': 'MARIA GUADALUPE  QUIJAS CORDERO',
     '1648': 'NORMA ANGELICA HERNANDEZ  TETUAN',
-    //'1658': 'JOSE CRUZ BECERRA RAMIREZ',
     '1663': 'MARIA INES LOZANO LOZANO',
     '1670': 'ANDREA DE LA LUZ RAMIREZ  OLMEDO',
     '1688': 'AIDEE ADRIANA ARAUJO SANCHEZ',
@@ -95,33 +94,26 @@ const nombresOficiales = {
     '2325': 'MARIA DEL CARMEN ESPINOZA LOPEZ',
     '2339': 'MARIA CRISTINA GONZALEZ PRADO',
     '2346': 'LAIZA NAYELI FERNANDEZ PEREZ',
-    //'2352': 'CHRISTIAN LORENA GOMEZ CASTILLO',
     '2353': 'MARTHA RAMIREZ RODRIGUEZ',
-    //'2367': 'JUAN JESUS AGUAYO RAMIREZ',
     '2372': 'GILBERTO  LOPEZ SEGOVIA',
     '2393': 'MARIA FERNANDA RODRIGUEZ PRECIADO',
     '2404': 'DAFNE ABIGAIL VALENTIN TORRES',
     '2459': 'SANJUANA  GARCIA ARAUJO',
     '2462': 'MARTHA GRISELDA ALONSO CABRERA',
     '2489': 'ANTONIO HERNANDEZ CASTRO',
-    //'2502': 'ANA PAULINA GONZALEZ GARCIA',
     '2508': 'JOSE JOEL  TORRES MORALES',
     '2525': 'LUZ REGINA GONZALEZ GARCIA',
     '2526': 'ALBA ARACELI SANCHEZ LOPEZ',
     '2529': 'PERLA LIZBETH  RODRIGUEZ  DIAZ',
     '2534': 'VICTORIA  PEREZ YEBRA',
-    //'2536': 'CRISTINA QUINTANA QUIJAS',
     '2543': 'JESUS ALFONSO OLVERA HIDALGO',
     '2548': 'HILDA ISELA  PONCE  GARCIA',
     '2550': 'NELI ALEXANDRA MAYA  PONCE',
-    //'2568': 'RAQUEL YANELI GONZALEZ GOMAR',
     '2569': 'SILVIA  DURAN ELIAS',
-    //'2585': 'MOLINA LOPEZ DULCE CRISTINA',
     '2591': 'MINERVA NEGRETE MACHUCA',
     '2595': 'BEBERLY ADRIANA  BASTIDA ROMERO',
     '2598': 'DAVID  ROJAS TORRES',
     '2599': 'DULCE MAYTE LOPEZ  RODRIGUEZ',
-    //'2605': 'JUAN ALFREDO VARGAS ZAVALA',
     '2618': 'MAYRA EDITH HERNANDEZ  RAMIREZ',
     '2626': 'LORENA NOEMI TORRES LOPEZ',
     '2627': 'MARIA GUADALUPE PEÑA NEGRETE',
@@ -129,9 +121,7 @@ const nombresOficiales = {
     '2630': 'NORMA MIREYA GUTIERREZ LOPEZ',
     '2640': 'PATRICIA  ANDRADE RAMIREZ',
     '2641': 'FRANCISCO GIOVANNI ORTEGA HERNANDEZ',
-    //'2643': 'MARTHA SARAI MIRANDA  NAVARRO',
     '2644': 'ADRIAN HERNANDEZ  GASCA',
-    //'2663': 'JESUS MARTIN MONTAÑEZ REA',
     '2683': 'GERARDO NAVA PEREZ',
     '2694': 'DULCE ITZEL DOMINGUEZ  GUERRERO',
     '2696': 'NORMA ERIKA ROCHA  ARANDA',
@@ -140,47 +130,35 @@ const nombresOficiales = {
     '2717': 'OWNA ARELY ALCALA LOPEZ',
     '2718': 'JOSE ALVARO FALCON GARCIA',
     '2719': 'SELENA CIRSTINA  RAMIREZ  RAMIREZ',
-    //'2721': 'PERLA MARLENE ROCHA PIÑA',
     '2724': 'ANA GABRIELA  RODRIGUEZ  MARTINEZ',
     '2725': 'MARIA CANDELARIA HERNANDEZ  CAMACHO',
     '2726': 'AMERICA LORELY LANDIN ELIAS',
     '2731': 'NANCY GERALDINE VIEYRA CASTILLO',
-    //'2734': 'OMAR  VARGAS ORTEGA',
     '2737': 'RAMIREZ HERNANDEZ ESMERALDA',
     '2738': 'ORTEGA MENDEZ PAULA IMELDA',
     '2739': 'JUAREZ HINOJOSA MARIANA PATRICIA',
     '2740': 'JORDAN IVAN GASCA ROJAS',
-    //'2744': 'JENNIFER VIOLETA LOZANO LOZANO',
     '2747': 'MURRIETA DUEÑAS ERIKA SELENA',
     '2748': 'REYNA GORETTI RAMIREZ GARCIA',
     '2750': 'RICARDO HOSSET LARA RIVAS',
     '2757': 'HIROKI SHIMIZU',
     '2760': 'BECERRA ALCANTAR JUANA',
-    //'2763': 'OLMOS AGUILERA FRANCISCO JAVIER',
     '2769': 'FERNANDEZ RODRIGUEZ TERESITA DE JESUS',
     '2770': 'BUSTAMANTE GUERRERO SANDRA',
     '2776': 'OLMOS BARRON FATIMA SOLEDAD',
     '2781': 'PEÑA NEGRETE BRENDA BERENICE',
     '2786': 'ORTIZ URBINA UBALDO ALEJANDRO',
     '2788': 'QUIJAS QUINTANA RICARDO',
-    //'2792': 'SALDAÑA MEZA MAYRA ALEJANDRA',
-    //'2793': 'CHAVEZ SOLANO EVELYN VIVIANA',
-    //'2798': 'RAMIREZ RODRIGUEZ LUCIA',
     '2801': 'VAZQUEZ FLORES MARICRUZ',
-    //'2804': 'JIMENEZ LOPEZ JOSE ALBERTO',
     '2815': 'MEZA CAUDILLO ROSARIO ADRIANA',
     '2816': 'MAEGUIBO DIEGO',
     '2821': 'NAKAJIMA TAKESHI',
     '2825': 'REYES GONZALEZ VALERIA ESTEFANIA',
     '2827': 'RODRIGUEZ CRUZ JOSE DANIEL',
-    //'2828': 'CHAVEZ ZERTUCHE ALEX MISAEL',
-    //'2835': 'RICO BUSTAMANTE ANA LIZBETH',
     '2837': 'VITAL RAMIREZ BRAULIO ADRIAN',
-    //'2838': 'COSS SANCHEZ ANGEL DANIEL',
     '2840': 'PEREZ NORBERTO TRISTAN ABEL',
     '2841': 'RAMIREZ TRUJILLO MARIA REYNA',
     '2843': 'MEJIA DIONICIO OSCAR',
-    //'2844': 'BONILLA DOMINGUEZ LUZ AIDA',
     '2846': 'MARTINEZ GONZALEZ DIANA GABRIELA',
     '2848': 'AGUIRRE MARTINEZ ALMA SOLEDAD',
     '2851': 'GOMEZ BELTRAN JUAN JOSE',
@@ -191,82 +169,24 @@ const nombresOficiales = {
     '2863': 'TRUJILLO SALAZAR SERGIO',
     '2866': 'NAVA CANO JOHANA',
     '2867': 'REYES ZENDEJAS AIDE GUADALUPE',
-    //'2868': 'IBARRA GASPAR MARCO ANTONIO',
     '2869': 'SUNOHARA YUTAKA',
     '2871': 'ARRIAGA SUAREZ MARIA GUADALUPE',
     '2874': 'RODRIGUEZ ORTEGA SAUL ALEJANDRO',
     '2875': 'ZEPEDA ESTRADA KARINA LUCERO',
     '2876': 'FUENTES MUÑIZ MARIA GUADALUPE JANET',
-    //'2878': 'TORRES RAMIREZ VELICIA RUBI',
     '2881': 'BARRIENTOS RODRIGUEZ DIEGO SANTIAGO',
-    //'2882': 'NAVARRO LOPEZ MOISES',
-    //'2883': 'GUDINO IBARRA FATIMA',
-    //'2885': 'TORRES MAGAÑA JESSICA MONTSERRAT',
     '2886': 'MORENO AGUILAR HECTOR ANTONIO',
     '2887': 'ROMERO AGUILAR GERARDO MISAEL',
     '2888': 'SANCHEZ CASTRO ALVARO DANIEL',
     '2889': 'BUSTAMANTE GUERRERO KAROL RUBI',
     '2890': 'AGUILAR ANGUIANO GUADALUPE DEL ROCIO',
-    //'2891': 'HERNANDEZ CASTRO JAZMIN',
-    //'2893': 'ANGUIANO VAZQUEZ JOHAN JESUS',
     '2894': 'MARIN VILCHIS ANGELA EUGENIA',
     '2895': 'BONILLA SANCHEZ CRISTINA',
-    //'2896': 'LUNA HERNANDEZ MELISSA',
     '2897': 'GALVAN MARES FERNANDO'
 };
 
 // Forzar actualización de cursos en Render
 
-// 1. Catálogo General de Cursos (Registra aquí todos tus cursos con sus archivos y forms)
-db.serialize(() => {
-    db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
-    db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
-    db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER, PRIMARY KEY(id_usuario, id_curso))");
-    db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
-
-    db.run("DELETE FROM cursos");
-
-    // Limpieza de duplicados previos por seguridad
-    db.run("DELETE FROM asignaciones WHERE rowid NOT IN (SELECT MIN(rowid) FROM asignaciones GROUP BY id_usuario, id_curso)");
-
-    // Ejemplos de tus cursos (puedes agregar cuantos quieras, mezclando videos locales, PDFs, presentaciones, etc.)
-    db.run("INSERT OR REPLACE INTO cursos VALUES (1, 'Curso de Seguridad Industrial', 'Seguridad', 'video', '/videos/seguridad.mp4', 'https://forms.gle/EXAMEN_1')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (2, 'Manual de Procesos y Calidad', 'Operaciones', 'pdf', '/videos/manual.pdf', 'https://forms.gle/EXAMEN_2')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (3, 'Inducción General de Planta', 'RH', 'video', '/videos/induccion.mp4', 'https://forms.gle/EXAMEN_3')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (4, 'Uso Correcto de EPP', 'Seguridad', 'presentacion', '/videos/epp.pdf', 'https://forms.gle/EXAMEN_4')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (5, 'Kaisen', 'KAISEN', 'video', '/videos/KAIZEN.mp4', 'https://forms.gle/bWTvtgxigDP6dYT1A')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (6, 'Listado de Verificacion DE 5´S', 'KAISEN', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', 'https://forms.gle/fQUMCP98B4sLxZCe9')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (7, 'Aspectos Ambientales', 'AMBIENTAL', 'video', '/videos/Aspectos ambientales.mp4', '')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (8, 'Inducción a ISO 14001', 'AMBIENTAL', 'video', '/videos/Inducción a ISO 14001.mp4', 'https://forms.gle/PmHegCo9WXGnvfgi7')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (9, 'Objetivos ambientales', 'AMBIENTAL', 'video', '/videos/Objetivos ambientales.mp4', 'https://forms.gle/bzypAVUH3VNSD5hD6')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (10, 'Recuerda reportar', 'AMBIENTAL', 'video', '/videos/Recuerda reportar.mp4', '')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (11, 'Sustancias químicas', 'AMBIENTAL', 'video', '/videos/Sustancias químicas.mp4', 'https://forms.gle/ppHVdZpFbpPB637WA')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (12, 'Infografia_Aviso_Ausencias', 'RH', 'pdf', '/videos/Infografia_Aviso_Ausencias.pdf', '')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (13, 'Alertas de calidad', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Alertas de calidad.mp4', 'https://forms.gle/TJmbox5MCzzbh9HFA')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (14, 'Auditorias de proceso', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Auditorias de proceso.mp4', 'https://forms.gle/8LQuJn7EFwEfgwVd9')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (15, 'Control de cambios de 4 M's', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/1. Control de cambios de 4 M's.mp4', 'https://forms.gle/93gwj7PaJUpJcEfbA')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (16, 'Control documental', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Control documental.mp4', 'https://forms.gle/R2LzXioDjWRaRgqQ8')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (17, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (18, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (19, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (20, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (21, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', '')");
-    db.run("INSERT OR REPLACE INTO cursos VALUES (22, 'Reglamento', 'RH', 'pdf', '/videos/REGLAMENTO.pdf', 'https://forms.gle/bCiff5CA1Vt3aAV56')");
-
-    // Forzar la recreación automática de asignaciones basadas en el objeto actual
-    db.run("DELETE FROM asignaciones");
-    const stmt = db.prepare("INSERT OR REPLACE INTO asignaciones (id_usuario, id_curso) VALUES (?, ?)");
-    for (const [nomina, cursos] of Object.entries(cursosPorNomina)) {
-        for (const cursoId of cursos) {
-            stmt.run(nomina, cursoId);
-        }
-    }
-    stmt.finalize();
-
-});
-
-
-// 2. MAPA DE ASIGNACIONES: Define exactamente qué ID(s) de curso le tocan a cada Nómina
 const cursosPorNomina = {
     '2887': [1, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], // Gerardo verá solo los cursos 1, 2 y 4
     '1011': [22],    // Gilberto verá solo el 2 y el 3
@@ -478,6 +398,57 @@ const cursosPorNomina = {
     // Si una nómina no está escrita aquí, no se le asignará ningún curso por defecto.
 };
 
+// Inicialización de la base de datos SQLite
+db.serialize(() => {
+    db.run("CREATE TABLE IF NOT EXISTS usuarios (nomina TEXT PRIMARY KEY, nombre TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS cursos (id INTEGER PRIMARY KEY, titulo TEXT, categoria TEXT, tipo_contenido TEXT, url_recurso TEXT, url_form TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS asignaciones (id_usuario TEXT, id_curso INTEGER, PRIMARY KEY(id_usuario, id_curso))");
+    db.run("CREATE TABLE IF NOT EXISTS resultados (id_usuario TEXT, id_evaluacion INTEGER, aprobado INTEGER, PRIMARY KEY(id_usuario, id_evaluacion))");
+
+    db.run("DELETE FROM cursos");
+
+    // Inserción de cursos con consultas preparadas (evita errores de sintaxis en apóstrofes)
+    const stmtCurso = db.prepare("INSERT OR REPLACE INTO cursos VALUES (?, ?, ?, ?, ?, ?)");
+    
+    const listaCursos = [
+        [1, 'Curso de Seguridad Industrial', 'Seguridad', 'video', '/videos/seguridad.mp4', 'https://forms.gle/EXAMEN_1'],
+        [2, 'Manual de Procesos y Calidad', 'Operaciones', 'pdf', '/videos/manual.pdf', 'https://forms.gle/EXAMEN_2'],
+        [3, 'Inducción General de Planta', 'RH', 'video', '/videos/induccion.mp4', 'https://forms.gle/EXAMEN_3'],
+        [4, 'Uso Correcto de EPP', 'Seguridad', 'presentacion', '/videos/epp.pdf', 'https://forms.gle/EXAMEN_4'],
+        [5, 'Kaisen', 'KAISEN', 'video', '/videos/KAIZEN.mp4', 'https://forms.gle/bWTvtgxigDP6dYT1A'],
+        [6, 'Listado de Verificacion DE 5´S', 'KAISEN', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', 'https://forms.gle/fQUMCP98B4sLxZCe9'],
+        [7, 'Aspectos Ambientales', 'AMBIENTAL', 'video', '/videos/Aspectos ambientales.mp4', ''],
+        [8, 'Inducción a ISO 14001', 'AMBIENTAL', 'video', '/videos/Inducción a ISO 14001.mp4', 'https://forms.gle/PmHegCo9WXGnvfgi7'],
+        [9, 'Objetivos ambientales', 'AMBIENTAL', 'video', '/videos/Objetivos ambientales.mp4', 'https://forms.gle/bzypAVUH3VNSD5hD6'],
+        [10, 'Recuerda reportar', 'AMBIENTAL', 'video', '/videos/Recuerda reportar.mp4', ''],
+        [11, 'Sustancias químicas', 'AMBIENTAL', 'video', '/videos/Sustancias químicas.mp4', 'https://forms.gle/ppHVdZpFbpPB637WA'],
+        [12, 'Infografia_Aviso_Ausencias', 'RH', 'pdf', '/videos/Infografia_Aviso_Ausencias.pdf', ''],
+        [13, 'Alertas de calidad', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Alertas de calidad.mp4', 'https://forms.gle/TJmbox5MCzzbh9HFA'],
+        [14, 'Auditorias de proceso', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Auditorias de proceso.mp4', 'https://forms.gle/8LQuJn7EFwEfgwVd9'],
+        [15, "Control de cambios de 4 M's", 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/1. Control de cambios de 4 M\'s.mp4', 'https://forms.gle/93gwj7PaJUpJcEfbA'],
+        [16, 'Control documental', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Control documental.mp4', 'https://forms.gle/R2LzXioDjWRaRgqQ8'],
+        [17, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        [18, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        [19, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        [20, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        [21, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        [22, 'Reglamento', 'RH', 'pdf', '/videos/REGLAMENTO.pdf', 'https://forms.gle/bCiff5CA1Vt3aAV56']
+    ];
+
+    listaCursos.forEach(c => stmtCurso.run(c));
+    stmtCurso.finalize();
+
+    // Cargar asignaciones iniciales
+    db.run("DELETE FROM asignaciones");
+    const stmtAsign = db.prepare("INSERT OR REPLACE INTO asignaciones (id_usuario, id_curso) VALUES (?, ?)");
+    for (const [nomina, cursos] of Object.entries(cursosPorNomina)) {
+        for (const cursoId of cursos) {
+            stmtAsign.run(nomina, cursoId);
+        }
+    }
+    stmtAsign.finalize();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -508,7 +479,7 @@ app.get('/', (req, res) => {
     `);
 });
 
-// Ruta de Login (POST) - Filtra y asigna los cursos correspondientes
+// Ruta de Login (POST)
 app.post('/login', (req, res) => {
     const nomina = req.body.nomina ? req.body.nomina.trim() : '';
     if (!nomina) return res.redirect('/');
@@ -517,21 +488,14 @@ app.post('/login', (req, res) => {
     const fotoPath = `/fotos/${nomina}.png`;
 
     db.run('INSERT OR REPLACE INTO usuarios (nomina, nombre) VALUES (?, ?)', [nomina, nombreMostrar], () => {
-        
-        // Extraemos la lista de ID de cursos configurados para esta nómina (si no tiene, devuelve arreglo vacío)
         const misCursosAsignados = cursosPorNomina[nomina] || [];
 
-        // Borramos asignaciones previas de este usuario para sincronizar con los cambios recientes
         db.run('DELETE FROM asignaciones WHERE id_usuario = ?', [nomina], () => {
-            
-            // Insertamos exclusivamente sus cursos correspondientes
             const stmt = db.prepare('INSERT OR IGNORE INTO asignaciones (id_usuario, id_curso) VALUES (?, ?)');
             misCursosAsignados.forEach(idCurso => {
                 stmt.run(nomina, idCurso);
             });
             stmt.finalize(() => {
-
-                // Consultamos únicamente los cursos que pertenecen a este usuario en la base de datos
                 const query = `SELECT c.id, c.titulo, c.categoria, r.aprobado FROM cursos c 
                                 JOIN asignaciones a ON c.id = a.id_curso 
                                 LEFT JOIN resultados r ON c.id = r.id_evaluacion AND r.id_usuario = ? 
@@ -562,35 +526,35 @@ app.post('/login', (req, res) => {
                         <div class="card" style="margin-top: 20px;">
                             <h1>Mis Cursos Asignados</h1>`;
                     
-                    if (cursos.length === 0) {
+                    if (!cursos || cursos.length === 0) {
                         html += `<p style="text-align: center; color: #666; padding: 20px;">No tienes cursos asignados actualmente.</p>`;
+                    } else {
+                        let categoriaActual = "";
+                        cursos.forEach(c => {
+                            if (c.categoria !== categoriaActual) {
+                                categoriaActual = c.categoria;
+                                html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
+                            }
+
+                            const esAprobado = (c.aprobado === 1);
+                            html += `<div class="li-item" style="margin-bottom: 10px;">
+                                <strong>${c.titulo}</strong>
+                                <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
+                                    onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
+                                    ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
+                                </button>
+                            </div>`;
+                        });
                     }
-
-                    let categoriaActual = "";
-                    cursos.forEach(c => {
-                        if (c.categoria !== categoriaActual) {
-                            categoriaActual = c.categoria;
-                            html += `<h2 style="text-align: left; color: #0033a0; margin-top: 30px; border-bottom: 2px solid #0033a0; padding-bottom: 5px;">${categoriaActual}</h2>`;
-                        }
-
-                        const esAprobado = (c.aprobado === 1);
-                        html += `<div class="li-item" style="margin-bottom: 10px;">
-                            <strong>${c.titulo}</strong>
-                            <button class="${esAprobado ? 'btn-approved' : 'btn-pending'}" 
-                                onclick="${esAprobado ? 'void(0)' : 'window.location.href=\'/ver-curso?id=' + c.id + '\''}">
-                                ${esAprobado ? '✓ Aprobado' : 'Ver Contenido'}
-                            </button>
-                        </div>`;
-                    });
                     
-                    res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></div></body></html>`);
+                    res.send(html + `</div><br><a href="/" style="color:#0033a0; font-weight:bold;">Cerrar Sesión</a></body></html>`);
                 });
             });
         });
     });
 });
 
-// Ruta para visualizar el contenido del curso (videos locales, PDFs o presentaciones)
+// Ruta para visualizar el contenido del curso
 app.get('/ver-curso', (req, res) => {
     db.get('SELECT * FROM cursos WHERE id = ?', [req.query.id], (err, c) => {
         if (!c) return res.send("Curso no encontrado");
