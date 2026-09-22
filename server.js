@@ -188,7 +188,7 @@ const nombresOficiales = {
 // Forzar actualización de cursos en Render
 
 const cursosPorNomina = {
-    '2887': [1, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], // Gerardo verá solo los cursos 1, 2 y 4
+    '2887': [22], // Gerardo verá solo los cursos 1, 2 y 4
     '1011': [22],    // Gilberto verá solo el 2 y el 3
     '1018': [22],  // Norma verá solo el 1, 3 y 4
     '1037': [2, 3],
