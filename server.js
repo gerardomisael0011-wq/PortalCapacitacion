@@ -546,10 +546,10 @@ db.serialize(() => {
         [15, "Control de cambios de 4 M's", 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/1. Control de cambios de 4 M\'s.mp4', 'https://forms.gle/93gwj7PaJUpJcEfbA'],
         [16, 'Control documental', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Control documental.mp4', 'https://forms.gle/R2LzXioDjWRaRgqQ8'],
         [17, 'Infografia_Aviso_Ausencias', 'RH', 'video', '/videos/Infografia_Aviso_Ausencias.mp4', ''],
-        //[18, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
-        //[19, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
-        //[20, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
-        //[21, 'Listado de Verificacion DE 5´S', 'CALIDAD', 'video', '/videos/LISTADO DE VERIFICACION DE 5´S.mp4', ''],
+        [18, 'Verificacion de las 5´s', 'KAISEN', 'video', '/videos/LISTADO 5´S.mp4', 'https://forms.gle/uLVzo9aTEuF9aVrt7'],
+        [19, '', '', '', '/videos/.mp4', ''],
+        [20, '', '', '', '/videos/.mp4', ''],
+        [21, '', '', '', '/videos/.mp4', ''],
         [22, 'Reglamento', 'RH', 'pdf', '/videos/REGLAMENTO.pdf', 'https://forms.gle/bCiff5CA1Vt3aAV56']
     ];
 
