@@ -547,18 +547,19 @@ db.serialize(() => {
         [16, 'Control documental', 'SISTEMA DE GESTION DE CALIDAD', 'video', '/videos/Control documental.mp4', 'https://forms.gle/R2LzXioDjWRaRgqQ8'],
         [17, 'Infografia_Aviso_Ausencias', 'RH', 'video', '/videos/Infografia_Aviso_Ausencias.mp4', ''],
         [18, 'Verificacion de las 5´s', 'KAISEN', 'video', '/videos/LISTADO 5´S.mp4', 'https://forms.gle/uLVzo9aTEuF9aVrt7'],
-        [19, '', '', '', '/videos/.mp4', ''],
-        [20, '', '', '', '/videos/.mp4', ''],
-        [21, '', '', '', '/videos/.mp4', ''],
-        [23, '', '', '', '/videos/.mp4', ''],
-        [24, '', '', '', '/videos/.mp4', ''],
+        [19, '12 Reglas', 'Produccion', 'video', '/videos/12 REGLAS 1.mp4', ''],
+        [20, 'Anormalidades Flujo PNC', 'Produccion', 'video', '/videos/ANORMALIDADES FLUJO PNC.mp4', ''],
+        [21, 'Hoja de Operacion Estandar', 'Produccion', 'video', '/videos/Hoja de Operación Estandar 2.mp4', ''],
+        [23, 'ILUO', 'Produccion', 'video', '/videos/ILUO.mp4', 'https://forms.gle/oTS3hah6aPJKWZqq8'],
+        [24, 'Los 7 desperdicios de Produccion', 'Produccion', 'video', '/videos/Los 7 desperdicios de Producción [Autoguardado] 1 (1).mp4', ''],
         [22, 'Reglamento', 'RH', 'pdf', '/videos/REGLAMENTO.pdf', 'https://forms.gle/bCiff5CA1Vt3aAV56'],
-        [25, '', '', '', '/videos/.mp4', ''],
-        [26, '', '', '', '/videos/.mp4', ''],
-        [27, '', '', '', '/videos/.mp4', ''],
-        [28, '', '', '', '/videos/.mp4', ''],
-        [29, '', '', '', '/videos/.mp4', ''],
-        [30, '', '', '', '/videos/.mp4', '']
+        [25, 'Control de Producto no Conforme', 'Calidad-Laboratorio', 'video', '/videos/4. CONTROL DE PRODUCTO NO CONFORME.mp4', ''],
+        [26, 'Caracteristicas Especiales', 'Calidad-Laboratorio', 'video', '/videos/Caracteristicas Especiales.mp4', ''],
+        [27, 'Fundamentos de instrumentos de medición ', 'Calidad-Laboratorio', 'video', '/videos/Fundamentos de instrumentos de medición.mp4', ''],
+        [28, 'Importancia de las liberaciones', 'Calidad-Laboratorio', 'video', '/videos/Importancia de las liberaciones.mp4', ''],
+        [29, 'Liberacion de producto y HDI', 'Calidad-Laboratorio', 'video', '/videos/Liberacion de producto y HDI.mp4', ''],
+        [30, '', '', 'video', '/videos/.mp4', ''],
+        [31, '', '', 'video', '/videos/.mp4', '']
     ];
 
     listaCursos.forEach(c => stmtCurso.run(c));
