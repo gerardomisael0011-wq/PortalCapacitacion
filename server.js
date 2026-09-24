@@ -550,7 +550,15 @@ db.serialize(() => {
         [19, '', '', '', '/videos/.mp4', ''],
         [20, '', '', '', '/videos/.mp4', ''],
         [21, '', '', '', '/videos/.mp4', ''],
-        [22, 'Reglamento', 'RH', 'pdf', '/videos/REGLAMENTO.pdf', 'https://forms.gle/bCiff5CA1Vt3aAV56']
+        [23, '', '', '', '/videos/.mp4', ''],
+        [24, '', '', '', '/videos/.mp4', ''],
+        [22, 'Reglamento', 'RH', 'pdf', '/videos/REGLAMENTO.pdf', 'https://forms.gle/bCiff5CA1Vt3aAV56'],
+        [25, '', '', '', '/videos/.mp4', ''],
+        [26, '', '', '', '/videos/.mp4', ''],
+        [27, '', '', '', '/videos/.mp4', ''],
+        [28, '', '', '', '/videos/.mp4', ''],
+        [29, '', '', '', '/videos/.mp4', ''],
+        [30, '', '', '', '/videos/.mp4', '']
     ];
 
     listaCursos.forEach(c => stmtCurso.run(c));
