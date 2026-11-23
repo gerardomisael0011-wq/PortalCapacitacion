@@ -241,6 +241,11 @@ const nombresOficiales = {
     '2956': 'JASSO BONILLA PAULINA',
     '2957': 'JASSO BONILLA LIZETH',
     '2958': 'RODRIGUEZ CARDOSO ALONDRA JACQUELINE',
+    '2959': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
 };
 
 // Forzar actualización de cursos en Render
@@ -511,7 +516,26 @@ const cursosPorNomina = {
     '2955': [17, 5, 7, 8, 9, 10, 13, 15, 22],
     '2956': [17, 5, 7, 8, 9, 10, 13, 15, 22],
     '2957': [17, 5, 7, 8, 9, 10, 13, 15, 22],
-    '2958': [17, 5, 7, 8, 9, 10, 13, 15, 22]
+    '2958': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2959': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2960': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2961': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2962': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2963': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2964': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2965': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2966': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2968': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2969': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2971': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2972': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2973': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2974': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2975': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2977': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2978': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2979': [17, 5, 7, 8, 9, 10, 13, 15, 22],
+    '2980': [17, 5, 7, 8, 9, 10, 13, 15, 22],
 
     // Si una nómina no está escrita aquí, no se le asignará ningún curso por defecto.
 };
@@ -546,7 +570,7 @@ db.serialize(() => {
         [15, "Control de cambios de 4 M's", 'SISTEMA DE GESTION DE CALIDAD', 'video', 'https://www.youtube.com/embed/oWYSF1rDrtE', 'https://forms.gle/93gwj7PaJUpJcEfbA'],
         [16, 'Control documental', 'SISTEMA DE GESTION DE CALIDAD', 'video', 'https://www.youtube.com/embed/G5YJnpRKDKA', 'https://forms.gle/R2LzXioDjWRaRgqQ8'],
         [17, 'Infografia_Aviso_Ausencias', 'RH', 'video', 'https://www.youtube.com/embed/jZijtqjaHiY', ''],
-        [18, 'Verificacion de las 5´s', 'KAISEN', 'video', 'https://www.youtube.com/embed/CTAZ6jmUbWg', 'https://forms.gle/uLVzo9aTEuF9aVrt7'],
+        [18, 'Verificacion de las 5´s', 'KAIZEN', 'video', 'https://www.youtube.com/embed/CTAZ6jmUbWg', 'https://forms.gle/uLVzo9aTEuF9aVrt7'],
         [19, '12 Reglas', 'Produccion', 'video', 'https://www.youtube.com/embed/shnEAQ9YTmk', ''],
         [20, 'Anormalidades Flujo PNC', 'Produccion', 'video', 'https://www.youtube.com/embed/xTBPbiL4uNs', ''],
         [21, 'Hoja de Operacion Estandar', 'Produccion', 'video', 'https://www.youtube.com/embed/j3lSJyuZSmU', ''],
@@ -558,8 +582,9 @@ db.serialize(() => {
         [27, 'Fundamentos de instrumentos de medición ', 'Calidad-Laboratorio', 'video', 'https://www.youtube.com/embed/dHl1m03SIl0', ''],
         [28, 'Importancia de las liberaciones', 'Calidad-Laboratorio', 'video', 'https://www.youtube.com/embed/vdHiSdq_1lw', ''],
         [29, 'Liberacion de producto y HDI', 'Calidad-Laboratorio', 'video', 'https://www.youtube.com/embed/v7FZOgWEuu0', '']
+        [30, 'PRUEBA', 'IT', 'pdf', '', ''],
+        [31, '', '', 'video', '/videos/.mp4', ''], 
         [30, '', '', 'video', '/videos/.mp4', ''],
-        [31, '', '', 'video', '/videos/.mp4', '']
     ];
 
     listaCursos.forEach(c => stmtCurso.run(c));
