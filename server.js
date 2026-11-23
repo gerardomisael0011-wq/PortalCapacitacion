@@ -582,9 +582,12 @@ db.serialize(() => {
         [27, 'Fundamentos de instrumentos de medición ', 'Calidad-Laboratorio', 'video', 'https://www.youtube.com/embed/dHl1m03SIl0', ''],
         [28, 'Importancia de las liberaciones', 'Calidad-Laboratorio', 'video', 'https://www.youtube.com/embed/vdHiSdq_1lw', ''],
         [29, 'Liberacion de producto y HDI', 'Calidad-Laboratorio', 'video', 'https://www.youtube.com/embed/v7FZOgWEuu0', '']
-        [30, 'PRUEBA', 'IT', 'pdf', '', ''],
-        [31, '', '', 'video', '/videos/.mp4', ''], 
-        [30, '', '', 'video', '/videos/.mp4', ''],
+        [30, '', 'IT', '', '', ''],
+        [31, '', 'CTPAT', '', '', ''], 
+        [32, '', 'Calidad', '', '', ''],
+        [32, '', 'Control de Produccion', '', '', ''],
+        [32, '', 'Sistema de Gestion de Calidad', '', '', ''],
+        [32, '', 'Mantenimiento', '', '', ''],
     ];
 
     listaCursos.forEach(c => stmtCurso.run(c));
